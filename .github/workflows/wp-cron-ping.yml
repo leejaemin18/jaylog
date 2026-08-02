@@ -1,0 +1,23 @@
+name: 워드프레스 예약발행 깨우기
+
+# 워드프레스 예약발행(wp-cron)은 사이트에 방문이 있어야 작동한다.
+# 새 블로그는 방문자가 없어 예약글이 제때 안 올라가는 문제가 있으므로,
+# GitHub 클라우드가 매시간 사이트를 한 번씩 두드려 예약발행을 깨운다.
+# 비밀키 불필요 — 일반 방문과 동일한 요청이며, PC가 꺼져 있어도 동작한다.
+
+on:
+  schedule:
+    # UTC 기준 매시간 7분 (한국시간 08:07 ~ 23:07 사이 매시간)
+    - cron: "7 23,0-14 * * *"
+  workflow_dispatch: {}   # 수동 실행 버튼도 제공
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: wp-cron 호출 (예약발행 트리거)
+        run: |
+          curl -s -m 30 -o /dev/null -w "wp-cron ping: HTTP %{http_code}\n" \
+            "https://jaylog.co.kr/wp-cron.php?doing_wp_cron" || true
+          curl -s -m 30 -o /dev/null -w "homepage ping: HTTP %{http_code}\n" \
+            "https://jaylog.co.kr/" || true
