@@ -1,0 +1,48 @@
+name: 초안 자동 등록 — 썸네일 생성 + 워드프레스 예약
+
+# drafts/ 폴더에 초안(md)이 올라오면 클라우드가 자동으로:
+#   1) 초안의 썸네일 브리프로 OpenAI 이미지 생성
+#   2) 워드프레스에 업로드 + 글 등록 (하루 1개씩 예약 큐 맨 뒤에)
+#   3) 처리한 초안을 published/ 폴더로 이동
+# 필요한 시크릿: WP_APP_PASSWORD, OPENAI_API_KEY
+# (Settings > Secrets and variables > Actions 에 등록)
+
+on:
+  push:
+    branches: [main]
+    paths: ["drafts/**.md"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: publish-draft
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 준비물 설치
+        run: pip install --quiet pyyaml pillow
+
+      - name: 초안 처리
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$WP_APP_PASSWORD" ] || [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::WP_APP_PASSWORD / OPENAI_API_KEY 시크릿을 먼저 등록하세요."
+            exit 1
+          fi
+          python3 .github/scripts/publish_draft.py
+
+      - name: 처리 결과 커밋
+        run: |
+          git config user.name "jaylog-bot"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "자동 처리: 초안 등록 완료 [bot]"
+          git push
