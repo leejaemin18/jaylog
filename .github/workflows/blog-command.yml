@@ -1,0 +1,90 @@
+name: 폰 명령 — 블로그 관리
+
+# 폰의 GitHub 앱(또는 아무 브라우저)에서 버튼으로 블로그를 관리한다.
+# 실행 위치: GitHub 클라우드 — 내 PC가 꺼져 있어도 동작.
+# 필요한 1회 설정: 저장소 Settings > Secrets and variables > Actions 에
+#   이름 WP_APP_PASSWORD, 값 = 워드프레스 응용 프로그램 비밀번호 등록.
+#
+# 사용법(폰): GitHub 앱 → jaylog 저장소 → Actions 탭 → "폰 명령 — 블로그 관리"
+#   → Run workflow → 명령 선택 → Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "실행할 명령"
+        required: true
+        default: "status"
+        type: choice
+        options:
+          - status          # 현황 보기 (발행/예약/초안 개수와 목록)
+          - publish-one     # 초안 중 가장 오래된 1개를 지금 발행
+          - schedule-queue  # 초안 전부를 내일부터 하루 1개씩 예약 (시간은 매일 다르게)
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 블로그 명령 실행
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          COMMAND: ${{ inputs.command }}
+        run: |
+          if [ -z "$WP_APP_PASSWORD" ]; then
+            echo "::error::WP_APP_PASSWORD 시크릿이 없습니다. Settings > Secrets and variables > Actions 에 등록하세요."
+            exit 1
+          fi
+          python3 - <<'PYEOF'
+          import os, json, base64, urllib.request, datetime
+
+          USER = "claude"
+          PW = os.environ["WP_APP_PASSWORD"]
+          AUTH = base64.b64encode(f"{USER}:{PW}".encode()).decode()
+          API = "https://jaylog.co.kr/wp-json/wp/v2"
+
+          def req(path, method="GET", data=None):
+              r = urllib.request.Request(
+                  API + path, method=method,
+                  headers={"Authorization": "Basic " + AUTH, "Content-Type": "application/json"},
+                  data=json.dumps(data).encode() if data else None)
+              with urllib.request.urlopen(r, timeout=30) as res:
+                  return json.load(res)
+
+          cmd = os.environ.get("COMMAND", "status")
+          drafts = req("/posts?status=draft&per_page=50&_fields=id,title,modified&orderby=modified&order=asc")
+          future = req("/posts?status=future&per_page=50&_fields=id,title,date")
+          published = req("/posts?status=publish&per_page=100&_fields=id")
+
+          print(f"[현황] 발행 {len(published)}개 / 예약 {len(future)}개 / 초안 {len(drafts)}개")
+          for p in future:
+              print(f"  예약: {p['date']} | {p['title']['rendered'][:40]}")
+          for p in drafts:
+              print(f"  초안: id {p['id']} | {p['title']['rendered'][:40]}")
+
+          if cmd == "publish-one":
+              if not drafts:
+                  print("발행할 초안이 없습니다."); raise SystemExit(0)
+              t = drafts[0]
+              r = req(f"/posts/{t['id']}", "POST", {"status": "publish"})
+              print(f"✅ 발행 완료: {r['title']['rendered'][:40]} → {r['link']}")
+
+          elif cmd == "schedule-queue":
+              if not drafts:
+                  print("예약 걸 초안이 없습니다."); raise SystemExit(0)
+              kst = datetime.timezone(datetime.timedelta(hours=9))
+              today = datetime.datetime.now(kst).date()
+              # 기존 예약과 안 겹치게: 마지막 예약일 다음 날부터 시작
+              start = today + datetime.timedelta(days=1)
+              if future:
+                  last = max(datetime.datetime.fromisoformat(p["date"]).date() for p in future)
+                  start = max(start, last + datetime.timedelta(days=1))
+              # 매일 다른 발행 시간 (하루 1개)
+              times = ["08:40", "12:25", "20:35", "17:10", "09:55", "21:20", "14:05"]
+              for i, t in enumerate(drafts):
+                  d = start + datetime.timedelta(days=i)
+                  hh, mm = times[(d.toordinal()) % len(times)].split(":")
+                  when = f"{d.isoformat()}T{hh}:{mm}:00"
+                  r = req(f"/posts/{t['id']}", "POST", {"status": "future", "date": when})
+                  print(f"✅ 예약: {when} | {r['title']['rendered'][:40]}")
+              print(f"총 {len(drafts)}개 예약 완료 (하루 1개씩)")
+          PYEOF
