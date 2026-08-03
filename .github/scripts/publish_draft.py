@@ -50,15 +50,14 @@ def make_tag_ids(names):
 
 
 def next_slot():
-    """예약 큐 맨 뒤 다음 날, 하루 1개 규칙에 맞는 발행 시각(KST)을 계산."""
+    """내일부터 예약이 없는 첫 날을 찾아 배정 (하루 1개, 빈 날짜 우선 채움)."""
     future = wp("/posts?status=future&per_page=100&_fields=date")
-    today = datetime.datetime.now(KST).date()
-    start = today + datetime.timedelta(days=1)
-    if future:
-        last = max(datetime.datetime.fromisoformat(p["date"]).date() for p in future)
-        start = max(start, last + datetime.timedelta(days=1))
-    hh, mm = PUBLISH_TIMES[start.toordinal() % len(PUBLISH_TIMES)].split(":")
-    return f"{start.isoformat()}T{hh}:{mm}:00"
+    taken = {datetime.datetime.fromisoformat(p["date"]).date() for p in future}
+    d = datetime.datetime.now(KST).date() + datetime.timedelta(days=1)
+    while d in taken:
+        d += datetime.timedelta(days=1)
+    hh, mm = PUBLISH_TIMES[d.toordinal() % len(PUBLISH_TIMES)].split(":")
+    return f"{d.isoformat()}T{hh}:{mm}:00"
 
 
 def process(path):
