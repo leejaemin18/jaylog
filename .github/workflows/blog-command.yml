@@ -20,6 +20,11 @@ on:
           - status          # 현황 보기 (발행/예약/초안 개수와 목록)
           - publish-one     # 초안 중 가장 오래된 1개를 지금 발행
           - schedule-queue  # 초안 전부를 내일부터 하루 1개씩 예약 (시간은 매일 다르게)
+          - trash-posts     # post_ids에 적은 글들을 휴지통으로 (30일 내 복구 가능)
+      post_ids:
+        description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
+        required: false
+        default: ""
 
 jobs:
   run:
@@ -29,6 +34,7 @@ jobs:
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
+          POST_IDS: ${{ inputs.post_ids }}
         run: |
           if [ -z "$WP_APP_PASSWORD" ]; then
             echo "::error::WP_APP_PASSWORD 시크릿이 없습니다. Settings > Secrets and variables > Actions 에 등록하세요."
@@ -87,4 +93,12 @@ jobs:
                   r = req(f"/posts/{t['id']}", "POST", {"status": "future", "date": when})
                   print(f"✅ 예약: {when} | {r['title']['rendered'][:40]}")
               print(f"총 {len(drafts)}개 예약 완료 (하루 1개씩)")
+
+          elif cmd == "trash-posts":
+              ids = [s.strip() for s in os.environ.get("POST_IDS", "").split(",") if s.strip()]
+              if not ids:
+                  print("::error::post_ids 입력이 비어 있습니다. 예: 75,76"); raise SystemExit(1)
+              for pid in ids:
+                  r = req(f"/posts/{pid}", "DELETE")
+                  print(f"🗑️ 휴지통 이동: id {pid} | {r['title']['rendered'][:40]} (30일 내 복구 가능)")
           PYEOF
