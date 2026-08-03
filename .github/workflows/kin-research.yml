@@ -1,0 +1,46 @@
+name: 지식iN 질문 조사
+
+# 폰/브라우저에서 키워드를 넣고 실행하면 네이버 지식iN 질문 목록을 수집해
+# research/ 폴더에 md 파일로 커밋한다. (글감 조사용)
+# 필요한 시크릿: NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
+
+on:
+  workflow_dispatch:
+    inputs:
+      keywords:
+        description: "조사할 키워드 (쉼표로 구분)"
+        required: true
+        default: "해외직구 관세, 해외직구 통관, 직구 세금"
+      display:
+        description: "키워드당 수집 건수 (최대 100)"
+        required: false
+        default: "50"
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 지식iN 질문 수집
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          KEYWORDS: ${{ inputs.keywords }}
+          DISPLAY: ${{ inputs.display }}
+        run: |
+          if [ -z "$NAVER_CLIENT_ID" ] || [ -z "$NAVER_CLIENT_SECRET" ]; then
+            echo "::error::NAVER_CLIENT_ID / NAVER_CLIENT_SECRET 시크릿을 먼저 등록하세요."
+            exit 1
+          fi
+          python3 .github/scripts/kin_research.py
+
+      - name: 결과 커밋
+        run: |
+          git config user.name "jaylog-bot"
+          git config user.email "actions@github.com"
+          git add research/
+          git diff --cached --quiet || git commit -m "지식iN 질문 조사 결과 [bot]"
+          git push

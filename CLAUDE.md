@@ -28,6 +28,7 @@
 - **하루 1개만 발행.** 여러 개는 초안으로 쌓고 예약발행(future)으로 분산, 발행 시간은 매일 다르게.
 - 예약발행 누락은 GitHub Actions(`wp-cron-ping.yml`)가 매시간 깨워서 보완함.
 - 폰/원격 발행·예약: GitHub Actions `blog-command.yml` (Run workflow → status / publish-one / schedule-queue).
+- 글감 조사: GitHub Actions `kin-research.yml` (Run workflow → 키워드 입력) — 네이버 지식iN 질문 목록을 `research/`에 수집. 인증은 시크릿 NAVER_CLIENT_ID/SECRET.
 
 ## 🗂️ 환경별 역할
 - **폰/클라우드(claude.ai) 등 키 없는 환경**: 글 초안을 아래 형식으로 `drafts/` 폴더에 저장하고 커밋·푸시만 하면 끝. **GitHub Actions(`publish-draft.yml`)가 자동으로 썸네일 생성 → 워드프레스 등록 → 하루 1개 예약**까지 처리한다 (PC 불필요).
