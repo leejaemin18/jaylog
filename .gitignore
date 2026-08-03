@@ -17,3 +17,4 @@ post*.txt
 Thumbs.db
 .DS_Store
 desktop.ini
+__pycache__/

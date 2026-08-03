@@ -81,6 +81,27 @@ def process(path):
                extra={"Content-Disposition": f'attachment; filename="{slug}-thumb.jpg"'})
     print(f"  썸네일 업로드: media {media['id']}")
 
+    # 1-b) 본문 이미지 생성 + 업로드 + 삽입 (body_image_brief가 있으면)
+    if meta.get("body_image_brief"):
+        png2 = openai_image(meta["body_image_brief"])
+        img2 = Image.open(io.BytesIO(png2)).convert("RGB")
+        buf2 = io.BytesIO()
+        img2.save(buf2, "JPEG", quality=88, optimize=True)
+        media2 = wp("/media", "POST", raw=buf2.getvalue(), ctype="image/jpeg",
+                    extra={"Content-Disposition": f'attachment; filename="{slug}-body.jpg"'})
+        print(f"  본문 이미지 업로드: media {media2['id']}")
+        alt = meta.get("body_image_alt", title)
+        fig = (f'<figure class="wp-block-image size-large">'
+               f'<img src="{media2["source_url"]}" alt="{alt}"/></figure>')
+        if "<!--본문이미지-->" in body:
+            body = body.replace("<!--본문이미지-->", fig, 1)
+        else:  # 마커가 없으면 두 번째 h2 앞(첫 섹션 끝)에 삽입
+            parts = re.split(r"(?=<h2)", body)
+            if len(parts) >= 3:
+                body = parts[0] + parts[1] + fig + "".join(parts[2:])
+            else:
+                body += fig
+
     # 2) 글 등록 (예약 큐 맨 뒤)
     mode = meta.get("schedule", "auto")
     post = {
