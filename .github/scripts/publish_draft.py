@@ -30,8 +30,12 @@ def openai_image(prompt):
         "https://api.openai.com/v1/images/generations", method="POST",
         headers={"Authorization": f"Bearer {OPENAI_KEY}", "Content-Type": "application/json"},
         data=json.dumps(payload).encode())
-    with urllib.request.urlopen(req, timeout=300) as res:
-        out = json.load(res)
+    try:
+        with urllib.request.urlopen(req, timeout=300) as res:
+            out = json.load(res)
+    except urllib.error.HTTPError as e:
+        body = e.read()[:500].decode("utf-8", "replace")
+        raise RuntimeError(f"OpenAI 이미지 생성 실패 HTTP {e.code}: {body}") from None
     return base64.b64decode(out["data"][0]["b64_json"])
 
 
@@ -136,8 +140,17 @@ def main():
     if not drafts:
         print("처리할 초안 없음")
         return
-    done = sum(1 for d in drafts if process(d))
-    print(f"완료: {done}/{len(drafts)}개 등록")
+    done, failed = 0, []
+    for d in drafts:
+        try:
+            if process(d):
+                done += 1
+        except Exception as e:  # 한 글이 실패해도 나머지는 계속 처리
+            failed.append(d)
+            print(f"::error::{d} 처리 실패 — {e}")
+    print(f"완료: {done}/{len(drafts)}개 등록" + (f", 실패 {len(failed)}건: {failed}" if failed else ""))
+    if failed:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
