@@ -1,10 +1,12 @@
-# 네이버 지식iN 검색 API로 질문 목록을 수집해 research/ 폴더에 저장하는 스크립트.
+# 네이버 지식iN + 다음(카카오) 검색 API로 질문·글 목록을 수집해 research/ 폴더에 저장하는 스크립트.
 # 사용: 환경변수 NAVER_CLIENT_ID, NAVER_CLIENT_SECRET, KEYWORDS(쉼표 구분), DISPLAY(선택, 기본 50)
+#       KAKAO_REST_API_KEY가 있으면 다음카페 검색도 함께 수집한다.
 # 네이버가 구 개발자센터/신 클라우드 API HUB 두 방식이 있어, 되는 조합을 자동 탐지한다.
 import os, re, json, html, datetime, urllib.parse, urllib.request
 
 CID = os.environ["NAVER_CLIENT_ID"].strip()
 CSEC = os.environ["NAVER_CLIENT_SECRET"].strip()
+KAKAO = os.environ.get("KAKAO_REST_API_KEY", "").strip()
 KEYWORDS = [k.strip() for k in os.environ.get("KEYWORDS", "해외직구 관세").split(",") if k.strip()]
 DISPLAY = min(int(os.environ.get("DISPLAY", "50") or 50), 100)
 KST = datetime.timezone(datetime.timedelta(hours=9))
@@ -47,6 +49,22 @@ def clean(s):
     return html.unescape(re.sub(r"</?b>", "", s)).strip()
 
 
+def daum_cafe(keyword):
+    """카카오 API로 다음카페 글 검색. 실패해도 전체를 멈추지 않는다."""
+    if not KAKAO:
+        return None
+    qs = urllib.parse.urlencode({"query": keyword, "size": 50, "sort": "accuracy"})
+    req = urllib.request.Request(
+        f"https://dapi.kakao.com/v2/search/cafe?{qs}",
+        headers={"Authorization": f"KakaoAK {KAKAO}"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as res:
+            return json.load(res).get("documents", [])
+    except Exception as e:
+        print(f"::warning::다음카페 검색 실패({keyword}): {e}")
+        return None
+
+
 def main():
     now = datetime.datetime.now(KST)
     lines = [f"# 지식iN 질문 조사 — {now:%Y-%m-%d %H:%M} (KST)", "",
@@ -68,7 +86,19 @@ def main():
             total += 1
             lines.append(f"- {clean(it.get('title',''))}  \n  {link}")
         lines.append("")
-        print(f"[수집] {kw}: {len(items)}건")
+        print(f"[수집] {kw}: 지식iN {len(items)}건")
+        cafe = daum_cafe(kw)
+        if cafe:
+            lines.append(f"### [다음카페] {kw} ({len(cafe)}건)")
+            for d in cafe:
+                url = d.get("url", "")
+                if url in seen:
+                    continue
+                seen.add(url)
+                total += 1
+                lines.append(f"- {clean(d.get('title',''))}  \n  {url}")
+            lines.append("")
+            print(f"[수집] {kw}: 다음카페 {len(cafe)}건")
     os.makedirs("research", exist_ok=True)
     path = f"research/지식인-{now:%Y%m%d-%H%M}.md"
     with open(path, "w", encoding="utf-8") as f:
