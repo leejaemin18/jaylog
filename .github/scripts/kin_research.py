@@ -10,13 +10,12 @@ DISPLAY = min(int(os.environ.get("DISPLAY", "50") or 50), 100)
 KST = datetime.timezone(datetime.timedelta(hours=9))
 
 # (엔드포인트, 헤더) 후보 — 위에서부터 시도해 처음 성공하는 조합 사용
+# 1순위: 신규 NAVER API HUB (네이버클라우드), 2순위: 구 개발자센터
 COMBOS = [
+    ("https://naverapihub.apigw.ntruss.com/search/v1/kin",
+     {"X-NCP-APIGW-API-KEY-ID": CID, "X-NCP-APIGW-API-KEY": CSEC}),
     ("https://openapi.naver.com/v1/search/kin.json",
      {"X-Naver-Client-Id": CID, "X-Naver-Client-Secret": CSEC}),
-    ("https://openapi.naver.com/v1/search/kin.json",
-     {"X-NCP-APIGW-API-KEY-ID": CID, "X-NCP-APIGW-API-KEY": CSEC}),
-    ("https://naveropenapi.apigw.ntruss.com/v1/search/kin.json",
-     {"X-NCP-APIGW-API-KEY-ID": CID, "X-NCP-APIGW-API-KEY": CSEC}),
 ]
 
 working = None  # 성공한 (url, headers)
@@ -25,7 +24,7 @@ errors = []
 
 def search(keyword):
     global working
-    qs = urllib.parse.urlencode({"query": keyword, "display": DISPLAY, "sort": "sim"})
+    qs = urllib.parse.urlencode({"query": keyword, "display": DISPLAY, "sort": "sim", "format": "json"})
     combos = [working] if working else COMBOS
     for url, headers in combos:
         req = urllib.request.Request(f"{url}?{qs}", headers=headers)
