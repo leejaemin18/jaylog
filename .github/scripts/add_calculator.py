@@ -78,14 +78,10 @@ def main():
         print("::error::렌더링 본문에 계산기 <script>가 없음 — 스크립트가 제거된 것으로 보임")
         return
     js = m.group(1)
-    for pat in ("<p>", "<br", "’", "“"):
-        idx = js.find(pat)
-        if idx >= 0:
-            print(f"[진단] '{pat}' 발견 위치 {idx}, 주변: ...{js[max(0,idx-80):idx+80]}...")
+    # 새 스크립트는 '<' 문자를 전혀 포함하지 않아야 정상 (태그는 «»로 쓰고 런타임 치환)
     issues = []
-    if "<br" in js: issues.append("<br> 태그 삽입됨")
+    if "<" in js: issues.append(f"'<' 문자 발견 (워드프레스가 태그를 삽입함): ...{js[max(0,js.find('<')-60):js.find('<')+60]}...")
     if "’" in js or "‘" in js or "”" in js or "“" in js: issues.append("따옴표가 곡선따옴표로 변형됨")
-    if "<p>" in js: issues.append("<p> 태그 삽입됨")
     if issues:
         print(f"::error::스크립트 변형 감지 (post {sample_id}): {', '.join(issues)}")
     else:
