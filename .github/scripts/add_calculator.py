@@ -65,6 +65,22 @@ def main():
                 removed += 1
                 print(f"➖ 계산기 제거: id {p['id']} | {title}")
     print(f"완료: 적용/교체 {added}건, 제거 {removed}건, 변경없음 {kept}건 / 전체 {len(posts)}건")
+    # 렌더링 검증: 워드프레스가 스크립트를 변형(줄바꿈에 <br> 삽입, 따옴표 변형)하지 않았는지 확인
+    sample_id = next(iter(KEEP))
+    rendered = wp(f"/posts/{sample_id}?_fields=content")["content"]["rendered"]
+    m = re.search(r"<script[^>]*>(.*?)</script>", rendered, re.S)
+    if not m:
+        print("::error::렌더링 본문에 <script>가 없음 — 스크립트가 제거된 것으로 보임")
+        return
+    js = m.group(1)
+    issues = []
+    if "<br" in js: issues.append("<br> 태그 삽입됨")
+    if "’" in js or "‘" in js or "”" in js or "“" in js: issues.append("따옴표가 곡선따옴표로 변형됨")
+    if "<p>" in js: issues.append("<p> 태그 삽입됨")
+    if issues:
+        print(f"::error::스크립트 변형 감지 (post {sample_id}): {', '.join(issues)}")
+    else:
+        print(f"검증 OK: post {sample_id} 렌더링 스크립트 온전함 (길이 {len(js)}자, 한 줄 유지)")
 
 
 if __name__ == "__main__":
