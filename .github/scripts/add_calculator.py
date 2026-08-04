@@ -68,11 +68,20 @@ def main():
     # 렌더링 검증: 워드프레스가 스크립트를 변형(줄바꿈에 <br> 삽입, 따옴표 변형)하지 않았는지 확인
     sample_id = next(iter(KEEP))
     rendered = wp(f"/posts/{sample_id}?_fields=content")["content"]["rendered"]
-    m = re.search(r"<script[^>]*>(.*?)</script>", rendered, re.S)
+    # 우리 스크립트(jaylog-calc를 참조하는 것)를 정확히 찾는다 — 다른 플러그인 스크립트와 구분
+    m = None
+    for cand in re.finditer(r"<script[^>]*>(.*?)</script>", rendered, re.S):
+        if "jaylog-calc" in cand.group(1):
+            m = cand
+            break
     if not m:
-        print("::error::렌더링 본문에 <script>가 없음 — 스크립트가 제거된 것으로 보임")
+        print("::error::렌더링 본문에 계산기 <script>가 없음 — 스크립트가 제거된 것으로 보임")
         return
     js = m.group(1)
+    for pat in ("<p>", "<br", "’", "“"):
+        idx = js.find(pat)
+        if idx >= 0:
+            print(f"[진단] '{pat}' 발견 위치 {idx}, 주변: ...{js[max(0,idx-80):idx+80]}...")
     issues = []
     if "<br" in js: issues.append("<br> 태그 삽입됨")
     if "’" in js or "‘" in js or "”" in js or "“" in js: issues.append("따옴표가 곡선따옴표로 변형됨")
