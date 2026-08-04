@@ -21,6 +21,7 @@ on:
           - publish-one     # 초안 중 가장 오래된 1개를 지금 발행
           - schedule-queue  # 초안 전부를 내일부터 하루 1개씩 예약 (시간은 매일 다르게)
           - trash-posts     # post_ids에 적은 글들을 휴지통으로 (30일 내 복구 가능)
+          - add-calculator  # 발행·예약 글 전체에 관부가세 계산기 삽입 (중복 자동 방지)
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -30,7 +31,16 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      - name: 계산기 삽입 (add-calculator 명령일 때만)
+        if: inputs.command == 'add-calculator'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/add_calculator.py
+
       - name: 블로그 명령 실행
+        if: inputs.command != 'add-calculator'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}

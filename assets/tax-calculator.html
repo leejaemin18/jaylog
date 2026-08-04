@@ -1,0 +1,71 @@
+<!--jaylog-tax-calc-->
+<div id="jaylog-calc" style="margin:2em 0;padding:24px 20px;border-radius:14px;background:#16233f;color:#f5f0e6;border:1px solid #c9a44a;font-size:16px;line-height:1.7;">
+  <p style="margin:0 0 4px;font-size:20px;font-weight:700;color:#e8c56f;">💰 우리 블로그 관부가세 계산기</p>
+  <p style="margin:0 0 16px;font-size:14px;color:#cfc6b3;">사려는 물건의 예상 세금을 바로 확인해 보세요. (2026년 기준)</p>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+    <label style="flex:1;min-width:130px;">발송 국가<br>
+      <select id="jc-country" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;">
+        <option value="us">미국</option>
+        <option value="etc" selected>미국 외 (중국·일본·유럽 등)</option>
+      </select>
+    </label>
+    <label style="flex:1;min-width:150px;">품목<br>
+      <select id="jc-item" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;">
+        <option value="8,0">일반 생활용품 (관세 8%)</option>
+        <option value="13,0">의류·신발 (관세 13%)</option>
+        <option value="8,0">가방·지갑·액세서리 (관세 8%)</option>
+        <option value="8,1">건강기능식품·영양제 (관세 8%)</option>
+        <option value="8,1">화장품·향수 (관세 8%)</option>
+        <option value="0,1">스마트폰·노트북·카메라 (관세 0%)</option>
+        <option value="8,1">그 밖의 전자제품 (관세 8%)</option>
+      </select>
+    </label>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+    <label style="flex:1;min-width:130px;">물품 가격 (달러)<br>
+      <input id="jc-price" type="number" min="0" placeholder="예: 180" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;">
+    </label>
+    <label style="flex:1;min-width:130px;">국제 배송비 (달러)<br>
+      <input id="jc-ship" type="number" min="0" placeholder="예: 20" value="0" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;">
+    </label>
+    <label style="flex:1;min-width:130px;">환율 (원/달러)<br>
+      <input id="jc-fx" type="number" min="0" value="1400" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;">
+    </label>
+  </div>
+  <button id="jc-run" type="button" style="width:100%;padding:14px;border:none;border-radius:8px;background:linear-gradient(135deg,#c9a44a,#e8c56f);color:#16233f;font-size:18px;font-weight:700;cursor:pointer;">계산하기</button>
+  <div id="jc-out" style="display:none;margin-top:16px;padding:16px;border-radius:10px;background:#0f1a30;border:1px solid #3a4a6b;"></div>
+  <p style="margin:14px 0 0;font-size:12.5px;color:#9f9684;">※ 대표 세율 기준의 참고용 계산입니다. 실제 세액은 품목 분류(HS코드)·환율에 따라 달라질 수 있으니 정확한 금액은 관세청 예상세액 조회(customs.go.kr) 또는 관세청 125로 확인하세요.</p>
+</div>
+<script>
+(function(){
+  var box=document.getElementById('jaylog-calc');if(!box)return;
+  box.querySelector('#jc-run').addEventListener('click',function(){
+    var price=parseFloat(box.querySelector('#jc-price').value)||0;
+    var ship=parseFloat(box.querySelector('#jc-ship').value)||0;
+    var fx=parseFloat(box.querySelector('#jc-fx').value)||1400;
+    var us=box.querySelector('#jc-country').value==='us';
+    var opt=box.querySelector('#jc-item').value.split(',');
+    var rate=parseFloat(opt[0])/100, excluded=opt[1]==='1';
+    var out=box.querySelector('#jc-out');
+    out.style.display='block';
+    if(price<=0){out.innerHTML='<b style="color:#e8c56f;">물품 가격을 입력해 주세요.</b>';return;}
+    var limit=(us&&!excluded)?200:150;
+    var won=function(n){return Math.round(n).toLocaleString('ko-KR')+'원';};
+    if(price<=limit){
+      out.innerHTML='<p style="margin:0;font-size:18px;"><b style="color:#7fd49a;">✅ 면세 예상</b> — 물품가격이 '+limit+'달러 이하라 관세·부가세가 없습니다.</p>'
+      +(excluded?'<p style="margin:8px 0 0;font-size:13.5px;color:#cfc6b3;">이 품목은 목록통관이 안 되는 품목이라 미국발이어도 기준이 150달러입니다. 수량 제한(영양제 총 6병 등)은 별도로 지켜야 합니다.</p>':'');
+      return;
+    }
+    var base=(price+ship)*fx;
+    var duty=base*rate;
+    var vat=(base+duty)*0.1;
+    out.innerHTML='<p style="margin:0 0 8px;font-size:18px;"><b style="color:#e8c56f;">💸 과세 예상</b> — '+limit+'달러를 넘어 전체 금액에 과세됩니다.</p>'
+    +'<table style="width:100%;font-size:15px;border-collapse:collapse;">'
+    +'<tr><td style="padding:4px 0;color:#cfc6b3;">과세가격 (물품+배송비)</td><td style="text-align:right;">'+won(base)+'</td></tr>'
+    +'<tr><td style="padding:4px 0;color:#cfc6b3;">관세 ('+(rate*100)+'%)</td><td style="text-align:right;">'+won(duty)+'</td></tr>'
+    +'<tr><td style="padding:4px 0;color:#cfc6b3;">부가세 (10%)</td><td style="text-align:right;">'+won(vat)+'</td></tr>'
+    +'<tr><td style="padding:8px 0 0;font-weight:700;color:#e8c56f;border-top:1px solid #3a4a6b;">총 예상 세금</td><td style="padding:8px 0 0;text-align:right;font-weight:700;font-size:18px;color:#e8c56f;border-top:1px solid #3a4a6b;">'+won(duty+vat)+'</td></tr>'
+    +'</table>';
+  });
+})();
+</script>

@@ -105,6 +105,15 @@ def process(path):
             else:
                 body += fig
 
+    # 1-c) 관부가세 계산기 위젯 삽입 (고지문 앞, 모든 글 공통)
+    if os.path.exists("assets/tax-calculator.html") and "jaylog-tax-calc" not in body:
+        calc = open("assets/tax-calculator.html", encoding="utf-8").read()
+        notice = "<p><em>본 글은 일반 정보"
+        if notice in body:
+            body = body.replace(notice, calc + "\n" + notice, 1)
+        else:
+            body += "\n" + calc
+
     # 2) 글 등록 (예약 큐 맨 뒤)
     mode = meta.get("schedule", "auto")
     post = {
