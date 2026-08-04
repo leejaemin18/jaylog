@@ -105,9 +105,13 @@ def process(path):
             else:
                 body += fig
 
-    # 1-c) 관부가세 계산기 위젯 삽입 (고지문 앞, 모든 글 공통)
-    if os.path.exists("assets/tax-calculator.html") and "jaylog-tax-calc" not in body:
+    # 1-c) 관부가세 계산기 위젯 (세금 계산과 관련된 글만 — 초안 frontmatter의 calculator 필드로 지정)
+    # 값: 일반 / 의류 / 가방 / 건기식 / 화장품 / 전자0 / 전자8  (없거나 none이면 미삽입)
+    CALC_PRESETS = {"일반": 0, "의류": 1, "가방": 2, "건기식": 3, "화장품": 4, "전자0": 5, "전자8": 6}
+    calc_key = str(meta.get("calculator", "none")).strip()
+    if calc_key in CALC_PRESETS and os.path.exists("assets/tax-calculator.html") and "jaylog-tax-calc" not in body:
         calc = open("assets/tax-calculator.html", encoding="utf-8").read()
+        calc = calc.replace('data-preset="0"', f'data-preset="{CALC_PRESETS[calc_key]}"')
         notice = "<p><em>본 글은 일반 정보"
         if notice in body:
             body = body.replace(notice, calc + "\n" + notice, 1)

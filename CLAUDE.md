@@ -45,6 +45,7 @@ slug: english-slug-for-url
 tags: [키워드1, 키워드2, 키워드3, 키워드4, 키워드5]
 category: 6
 schedule: auto   # auto=예약 큐 맨 뒤(하루 1개) / now=즉시 발행 / draft=WP 초안으로만
+calculator: none # 관부가세 계산기 — 세금 계산과 관련된 글에만: 일반/의류/가방/건기식/화장품/전자0/전자8, 무관한 글은 none
 excerpt: 검색결과에 보일 1~2문장 요약
 thumbnail_brief: |
   최고급 프리미엄 경제지 표지 스타일의 블로그 썸네일. 가로형 구도.

@@ -1,5 +1,5 @@
 <!--jaylog-tax-calc-->
-<div id="jaylog-calc" style="margin:2em 0;padding:24px 20px;border-radius:14px;background:#16233f;color:#f5f0e6;border:1px solid #c9a44a;font-size:16px;line-height:1.7;">
+<div id="jaylog-calc" data-preset="0" style="margin:2em 0;padding:24px 20px;border-radius:14px;background:#16233f;color:#f5f0e6;border:1px solid #c9a44a;font-size:16px;line-height:1.7;">
   <p style="margin:0 0 4px;font-size:20px;font-weight:700;color:#e8c56f;">💰 우리 블로그 관부가세 계산기</p>
   <p style="margin:0 0 16px;font-size:14px;color:#cfc6b3;">사려는 물건의 예상 세금을 바로 확인해 보세요. (2026년 기준)</p>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
@@ -39,6 +39,8 @@
 <script>
 (function(){
   var box=document.getElementById('jaylog-calc');if(!box)return;
+  var pre=parseInt(box.getAttribute('data-preset'))||0;
+  box.querySelector('#jc-item').selectedIndex=pre;
   box.querySelector('#jc-run').addEventListener('click',function(){
     var price=parseFloat(box.querySelector('#jc-price').value)||0;
     var ship=parseFloat(box.querySelector('#jc-ship').value)||0;
