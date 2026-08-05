@@ -22,3 +22,31 @@ jobs:
             "https://jaylog.co.kr/wp-cron.php?doing_wp_cron" || true
           curl -s -m 30 -o /dev/null -w "homepage ping: HTTP %{http_code}\n" \
             "https://jaylog.co.kr/" || true
+
+      - name: 밀린 예약글 강제 발행 (wp-cron 불발 대비)
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, json, base64, datetime, urllib.request
+          PW = os.environ.get("WP_APP_PASSWORD", "")
+          if not PW:
+              print("WP_APP_PASSWORD 없음 — 건너뜀"); raise SystemExit(0)
+          AUTH = base64.b64encode(f"claude:{PW}".encode()).decode()
+          API = "https://jaylog.co.kr/wp-json/wp/v2"
+          def req(p, m="GET", d=None):
+              r = urllib.request.Request(API + p, method=m,
+                  headers={"Authorization": "Basic " + AUTH, "Content-Type": "application/json"},
+                  data=json.dumps(d).encode() if d else None)
+              with urllib.request.urlopen(r, timeout=30) as res:
+                  return json.load(res)
+          now = datetime.datetime.now(datetime.timezone.utc)
+          late = 0
+          for p in req("/posts?status=future&per_page=50&_fields=id,title,date_gmt"):
+              due = datetime.datetime.fromisoformat(p["date_gmt"]).replace(tzinfo=datetime.timezone.utc)
+              if due <= now:
+                  r = req(f"/posts/{p['id']}", "POST", {"status": "publish"})
+                  late += 1
+                  print(f"⏰ 밀린 예약글 강제 발행: id {p['id']} | {r['title']['rendered'][:40]}")
+          print(f"강제 발행 {late}건" if late else "밀린 예약글 없음")
+          PYEOF
