@@ -22,6 +22,7 @@ on:
           - schedule-queue  # 초안 전부를 내일부터 하루 1개씩 예약 (시간은 매일 다르게)
           - trash-posts     # post_ids에 적은 글들을 휴지통으로 (30일 내 복구 가능)
           - add-calculator  # 발행·예약 글 전체에 관부가세 계산기 삽입 (중복 자동 방지)
+          - fix-posts       # fix_post_text.py의 FIXES에 적힌 본문 교정 실행
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -39,8 +40,14 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: python3 .github/scripts/add_calculator.py
 
+      - name: 본문 교정 (fix-posts 명령일 때만)
+        if: inputs.command == 'fix-posts'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/fix_post_text.py
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
