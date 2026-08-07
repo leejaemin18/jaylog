@@ -30,7 +30,8 @@ def main():
     for p in posts:
         raw = p["content"]["raw"]
         title = p["title"]["raw"][:30]
-        if "customs.go.kr" in raw:
+        # 계산기엔 'customs.go.kr'가 '글자'로만 있음 → 진짜 <a> 링크가 있을 때만 건너뜀
+        if '<a href="https://www.customs.go.kr' in raw:
             skip += 1
             continue
         new = raw
