@@ -25,6 +25,7 @@ on:
           - fix-posts       # fix_post_text.py의 FIXES에 적힌 본문 교정 실행
           - install-plugins # SEO·속도·목차 등 추천 플러그인 원격 설치
           - create-pages    # 애드센스 신뢰 페이지(소개·문의·면책고지) 생성
+          - seo-boost       # 전 글 공통 SEO 보강(고지문 관세청→외부링크)
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -60,8 +61,14 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: python3 .github/scripts/create_pages.py
 
+      - name: SEO 보강 (seo-boost 명령일 때만)
+        if: inputs.command == 'seo-boost'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/seo_boost.py
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
