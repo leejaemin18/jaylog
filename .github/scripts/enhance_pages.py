@@ -48,7 +48,21 @@ def main():
     except Exception as e:
         print(f"::warning::저자 bio 설정 실패 — {e}")
 
-    # 3) 문의/면책 덤프
+    # 3) 문의 페이지에서 수익성 유도 문구 제거 (승인 전 '광고 목적 사이트' 인상 방지)
+    cps = wp("/pages?slug=contact&context=edit&_fields=id,content")
+    if cps:
+        cid = cps[0]["id"]
+        craw = cps[0]["content"]["raw"]
+        new = craw
+        for pat in (r"\s*<li>[^<]*제휴[^<]*</li>", r"\s*<li>[^<]*광고[^<]*</li>"):
+            new = re.sub(pat, "", new)
+        if new != craw:
+            wp(f"/pages/{cid}", "POST", {"content": new})
+            print(f"✅ 문의 페이지 수익성 문구 제거: id {cid}")
+        else:
+            print("문의 페이지: 제거할 수익성 문구 없음")
+
+    # 4) 문의/면책 덤프(점검용)
     os.makedirs("review", exist_ok=True)
     dump = []
     for slug in ("contact", "disclaimer"):
