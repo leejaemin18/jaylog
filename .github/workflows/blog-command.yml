@@ -21,6 +21,7 @@ on:
           - publish-one     # 초안 중 가장 오래된 1개를 지금 발행
           - schedule-queue  # 초안 전부를 내일부터 하루 1개씩 예약 (시간은 매일 다르게)
           - trash-posts     # post_ids에 적은 글들을 휴지통으로 (30일 내 복구 가능)
+          - publish-ids     # post_ids 글을 지금 즉시 발행 (비우면 임박한 예약글 1개)
           - add-calculator  # 발행·예약 글 전체에 관부가세 계산기 삽입 (중복 자동 방지)
           - fix-posts       # fix_post_text.py의 FIXES에 적힌 본문 교정 실행
           - install-plugins # SEO·속도·목차 등 추천 플러그인 원격 설치
@@ -170,4 +171,15 @@ jobs:
               for pid in ids:
                   r = req(f"/posts/{pid}", "DELETE")
                   print(f"🗑️ 휴지통 이동: id {pid} | {r['title']['rendered'][:40]} (30일 내 복구 가능)")
+
+          elif cmd == "publish-ids":
+              ids = [s.strip() for s in os.environ.get("POST_IDS", "").split(",") if s.strip()]
+              if not ids:
+                  # id 미지정이면 예약글 중 가장 임박한 것 1개를 지금 발행
+                  if not future:
+                      print("발행할 예약글이 없습니다."); raise SystemExit(0)
+                  ids = [str(min(future, key=lambda p: p["date"])["id"])]
+              for pid in ids:
+                  r = req(f"/posts/{pid}", "POST", {"status": "publish"})
+                  print(f"✅ 즉시 발행: id {pid} | {r['title']['rendered'][:40]} → {r['link']}")
           PYEOF
