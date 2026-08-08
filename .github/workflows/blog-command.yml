@@ -34,6 +34,7 @@ on:
           - export-content  # 발행·예약 글 전체 본문을 review/ 폴더로 내려받아 커밋(품질 평가용)
           - create-calculator-page # 관부가세 계산기 전용 페이지 생성/갱신 (글은 링크만)
           - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
+          - site-audit      # 페이지·저자·글수 현황을 review/site-audit.txt로 (애드센스 재점검)
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -134,8 +135,20 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: python3 .github/scripts/apply_revisions.py
 
+      - name: 사이트 감사 (site-audit 명령일 때만)
+        if: inputs.command == 'site-audit'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/site_audit.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/site-audit.txt
+          git commit -m "사이트 감사 결과 기록 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
