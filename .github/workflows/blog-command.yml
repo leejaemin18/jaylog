@@ -32,6 +32,8 @@ on:
           - add-related     # 내부링크 부족 글에 관련글 블록 추가
           - add-body-images # 본문 이미지 없는 옛날 글에 이미지 생성·삽입(OpenAI)
           - export-content  # 발행·예약 글 전체 본문을 review/ 폴더로 내려받아 커밋(품질 평가용)
+          - create-calculator-page # 관부가세 계산기 전용 페이지 생성/갱신 (글은 링크만)
+          - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -114,8 +116,26 @@ jobs:
           git commit -m "본문 내보내기: 품질 평가용 review/ 갱신 [bot]" || echo "변경 없음"
           for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
 
+      - name: 계산기 페이지 생성 (create-calculator-page 명령일 때만)
+        if: inputs.command == 'create-calculator-page'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/create_calculator_page.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/calc-page.txt
+          git commit -m "계산기 페이지 링크 기록 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+
+      - name: 수정본 적용 (apply-revisions 명령일 때만)
+        if: inputs.command == 'apply-revisions'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/apply_revisions.py
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
