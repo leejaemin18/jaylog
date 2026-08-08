@@ -31,6 +31,7 @@ on:
           - seo-audit       # 전 글 SEO 점검 + 빈 요약 자동 채움
           - add-related     # 내부링크 부족 글에 관련글 블록 추가
           - add-body-images # 본문 이미지 없는 옛날 글에 이미지 생성·삽입(OpenAI)
+          - export-content  # 발행·예약 글 전체 본문을 review/ 폴더로 내려받아 커밋(품질 평가용)
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -99,8 +100,20 @@ jobs:
           pip install --quiet pillow
           python3 .github/scripts/add_body_images.py
 
+      - name: 전체 본문 내보내기 (export-content 명령일 때만)
+        if: inputs.command == 'export-content'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/export_posts.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/
+          git commit -m "본문 내보내기: 품질 평가용 review/ 갱신 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
