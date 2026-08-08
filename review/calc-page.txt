@@ -1,0 +1,3 @@
+id=253
+link=https://jaylog.co.kr/gwanbuga-calculator/
+stable=https://jaylog.co.kr/?page_id=253
