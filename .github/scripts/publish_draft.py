@@ -105,18 +105,22 @@ def process(path):
             else:
                 body += fig
 
-    # 1-c) 관부가세 계산기 위젯 (세금 계산과 관련된 글만 — 초안 frontmatter의 calculator 필드로 지정)
-    # 값: 일반 / 의류 / 가방 / 건기식 / 화장품 / 전자0 / 전자8  (없거나 none이면 미삽입)
-    CALC_PRESETS = {"일반": 0, "의류": 1, "가방": 2, "건기식": 3, "화장품": 4, "전자0": 5, "전자8": 6}
+    # 1-c) 관부가세 계산기 — 세금 계산과 관련된 글이면 계산기 전용 페이지로 가는 버튼 링크를 넣는다.
+    # (예전엔 계산기 위젯 HTML을 글마다 인라인 복붙했으나, 애드센스가 '복붙 중복'으로 감점 →
+    #  독립 페이지 1개로 분리하고 링크만 넣는 방식으로 변경. calculator 필드는 '세금 관련 글인가' 표시로만 사용.)
+    CALC_KEYS = {"일반", "의류", "가방", "건기식", "화장품", "전자0", "전자8"}
     calc_key = str(meta.get("calculator", "none")).strip()
-    if calc_key in CALC_PRESETS and os.path.exists("assets/tax-calculator.html") and "jaylog-tax-calc" not in body:
-        calc = open("assets/tax-calculator.html", encoding="utf-8").read()
-        calc = calc.replace('data-preset="0"', f'data-preset="{CALC_PRESETS[calc_key]}"')
+    CALC_URL = "https://jaylog.co.kr/gwanbuga-calculator/"
+    if calc_key in CALC_KEYS and CALC_URL not in body:
+        btn = ('<p style="text-align:center;margin:1.6em 0;">'
+               f'<a href="{CALC_URL}" style="display:inline-block;padding:12px 26px;'
+               'background:#16233f;color:#e8c56f;border:1px solid #c9a44a;border-radius:8px;'
+               'font-weight:700;text-decoration:none;">💰 관부가세 계산기로 내 예상 세금 계산하기 →</a></p>')
         notice = "<p><em>본 글은 일반 정보"
         if notice in body:
-            body = body.replace(notice, calc + "\n" + notice, 1)
+            body = body.replace(notice, btn + "\n" + notice, 1)
         else:
-            body += "\n" + calc
+            body += "\n" + btn
 
     # 2) 글 등록 (예약 큐 맨 뒤)
     mode = meta.get("schedule", "auto")
