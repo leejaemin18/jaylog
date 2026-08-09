@@ -1,44 +1,46 @@
 # [98] 관세 내라는 문자, 진짜인지 확인하고 안전하게 납부하는 법
 
 - status: publish / date: 2026-08-08T14:05:00 / link: https://jaylog.co.kr/%ea%b4%80%ec%84%b8-%eb%82%b4%eb%9d%bc%eb%8a%94-%eb%ac%b8%ec%9e%90-%ec%a7%84%ec%a7%9c%ec%9d%b8%ec%a7%80-%ed%99%95%ec%9d%b8%ed%95%98%ea%b3%a0-%ec%95%88%ec%a0%84%ed%95%98%ea%b2%8c-%eb%82%a9%eb%b6%80/
-- 글자수(공백제외): 3561 / h2: 4 / 표: 1 / 리스트: 1
+- 글자수(공백제외): 2028 / h2: 5 / 표: 1 / 리스트: 1
 - 내부링크: 2 / 외부링크: 1 / 이미지: 1(alt 1)
 - excerpt: 직구 후 날아온 관세 납부 문자, 진짜와 가짜를 가르는 확인 포인트 3가지와 인터넷지로·카드로 안전하게 납부하는 절차를 정리했습니다.
 
 ---
 
-<p>직구 물건이 인천에 도착할 때쯤 "관세를 납부해야 배송됩니다"라는 문자가 옵니다. 문제는 요즘 사기 문자도 똑같은 문장으로 온다는 것입니다. 실제로 세금이 나온 건지 3분 만에 확인하는 방법과, 확인 후 가장 안전하게 내는 방법을 2026년 기준으로 정리합니다.</p>
+<p>직구 물건이 인천에 도착할 무렵 "관세를 납부해야 배송이 진행됩니다"라는 문자가 옵니다. 골치 아픈 건, 진짜 안내와 가짜 사기 문자가 글자 하나 안 틀리고 똑같이 온다는 점입니다. 문장만 봐서는 구별이 안 됩니다. 그래서 "문자를 읽고 판단"하는 게 아니라, 문자를 아예 믿지 않고 다른 경로로 확인하는 습관이 필요합니다. 세금이 진짜 나온 건지 확인하는 흐름과, 확인 뒤 가장 안전하게 내는 방법을 2026년 기준으로 정리합니다.</p>
 
-<h2 class="wp-block-heading">진짜 세금 안내는 이 경로로만 온다</h2>
-<p>150달러(미국발 200달러)를 넘는 물품은 수입신고 후 세액이 확정되고, 안내는 두 갈래로 옵니다. 하나는 <strong>관세청 명의의 카카오 알림톡</strong>(미수신 시 일반 문자)이고, 다른 하나는 통관을 대행한 <strong>특송업체의 납부 안내</strong>입니다. 내 물건이 면세 범위인데 세금 문자가 왔다면 그것부터 의심 신호입니다. 세금이 나올 금액인지는 <a href="https://jaylog.co.kr/?p=19">관세 면제 기준 150달러</a> 글에서 확인할 수 있습니다.</p>
+<h2 class="wp-block-heading">진짜 세금 안내는 정해진 두 경로로만 온다</h2>
+<p>물품가격이 150달러(미국발 목록통관 대상은 200달러)를 넘으면 수입신고 후 세액이 확정되고, 그때 안내가 나갑니다. 정식 안내는 사실상 두 갈래뿐입니다. 하나는 <strong>관세청 명의의 카카오 알림톡</strong>(알림톡을 못 받는 번호면 일반 문자로 대체)이고, 다른 하나는 통관을 대행한 <strong>특송업체(페덱스·DHL·CJ대한통운 등)의 납부 안내</strong>입니다. 이 두 경로가 아닌 곳에서 온 세금 문자는 일단 색안경을 끼고 봐야 합니다.</p>
+<p>여기서 한 가지 판별 기준이 생깁니다. 애초에 <strong>세금이 나올 물건이었는지</strong>를 먼저 따져 보는 겁니다. 20~30달러짜리 소액 물건을 하나 샀는데 관세 문자가 왔다면, 금액 자체가 면세 범위라 세금이 나올 수가 없습니다. 내 주문이 과세 대상이었는지 헷갈린다면 <a href="https://jaylog.co.kr/?p=19">관세 면제 기준 150달러</a> 글에서 먼저 확인해 보세요. 면세 범위인데 세금을 내라는 문자가 왔다면 그 자체가 가장 확실한 사기 신호입니다.</p>
 
-<h2 class="wp-block-heading">가짜를 가르는 확인 포인트 3가지</h2>
+<h2 class="wp-block-heading">링크는 누르지 말고 유니패스에서 직접 조회한다</h2>
 <figure class="wp-block-image size-large"><img src="https://jaylog.co.kr/wp-content/uploads/2026/08/customs-tax-payment-body.jpg" alt="진짜 관세 안내와 가짜 사기 문자를 나란히 비교하는 장면"/></figure>
-<ul>
-<li><strong>① 주소창을 본다</strong> — 정식 납부는 관세청 유니패스(unipass.customs.go.kr)나 인터넷지로(giro.or.kr)에서 이뤄집니다. 문자 속 링크가 낯선 단축주소나 이상한 도메인이면 누르지 마세요.</li>
-<li><strong>② 요구하는 것을 본다</strong> — 세관과 특송업체는 문자로 카드번호·비밀번호·신분증 사진을 요구하지 않고, 앱 설치를 유도하지도 않습니다. 이 중 하나라도 요구하면 사기입니다.</li>
-<li><strong>③ 문자를 믿지 말고 직접 조회한다</strong> — 가장 확실한 방법. 링크를 누르는 대신 유니패스에 직접 접속해 '세금 납부' 메뉴에서 내 앞으로 고지된 세액이 있는지 조회하면 끝납니다. 없으면 그 문자는 가짜입니다.</li>
-</ul>
+<p>가짜를 가려내는 가장 확실한 방법은 문자 속 링크를 아예 건드리지 않는 것입니다. 문자가 진짜든 가짜든 상관없이, 아래 순서로 직접 조회하면 답이 나옵니다.</p>
+<ol>
+<li>문자의 링크를 누르지 말고, 브라우저 주소창에 <strong>unipass.customs.go.kr</strong>을 직접 입력해 관세청 유니패스에 접속합니다.</li>
+<li>로그인 후 '세금납부' 또는 '수입신고 조회' 메뉴에서 <strong>내 통관고유부호(개인통관부호) 앞으로 고지된 세액이 있는지</strong> 확인합니다.</li>
+<li>고지된 세액이 있으면 그 화면에서 바로 납부하면 되고, <strong>아무것도 조회되지 않으면 방금 온 문자는 가짜</strong>입니다.</li>
+</ol>
+<p>이 흐름의 핵심은 "링크를 눌러도 되는 문자인지 판단"하는 단계를 통째로 건너뛴다는 데 있습니다. 진짜 안내라도 링크 대신 유니패스에서 조회해 내면 되니, 링크를 누를 이유 자체가 없습니다. 참고로 세관과 특송업체는 문자로 <strong>카드번호·비밀번호·신분증 사진을 요구하거나 앱 설치를 유도하지 않습니다.</strong> 이 중 하나라도 요구하면 볼 것도 없이 사기입니다. 상담을 하다 보면, 이 원칙 하나만 지켜도 될 일을 "링크가 진짜인지 가짜인지" 눈으로 감별하려다 낚이는 경우가 대부분입니다. 육안 감별은 이길 수 없는 싸움입니다.</p>
 
-<h2 class="wp-block-heading">납부는 세 가지 방법 중 편한 것으로</h2>
+<h2 class="wp-block-heading">확인이 끝났으면 이렇게 납부한다</h2>
+<p>진짜 세액이 확인됐다면, 납부는 다음 세 가지 중 편한 방법을 쓰면 됩니다.</p>
 <figure class="wp-block-table"><table>
 <thead><tr><th>방법</th><th>절차</th><th>이런 분께</th></tr></thead>
 <tbody>
-<tr><td>알림톡에서 바로</td><td>관세청 알림톡 → 간편인증 → 인터넷지로 연결 납부</td><td>알림톡을 받은 경우 가장 간단</td></tr>
-<tr><td>인터넷지로/카드로택스</td><td>사이트 접속 → 관세 조회 → 계좌이체·카드 납부</td><td>직접 확인하고 내고 싶은 분</td></tr>
-<tr><td>특송업체 대납</td><td>택배사가 먼저 내고 배송 시 청구</td><td>안내에 따르면 됨 (수수료 여부 확인)</td></tr>
+<tr><td>알림톡에서 바로</td><td>관세청 알림톡 → 간편인증 → 인터넷지로 연결 납부</td><td>알림톡을 받았고, 간편하게 끝내고 싶은 분</td></tr>
+<tr><td>인터넷지로·카드로택스</td><td>사이트 직접 접속 → 관세 조회 → 계좌이체·카드 납부</td><td>문자를 안 거치고 직접 확인해 내고 싶은 분</td></tr>
+<tr><td>특송업체 대납</td><td>택배사가 먼저 세금을 내고 배송 시 청구</td><td>안내에 따르면 되지만, 대납 수수료 여부는 확인</td></tr>
 </tbody>
 </table></figure>
-<p>납부 기한은 수입신고 수리일로부터 15일 이내이며, 내지 않으면 통관과 배송이 계속 멈추고 가산금이 붙습니다. 세액이 어떻게 계산된 것인지 궁금하다면 <a href="https://jaylog.co.kr/?p=27">관부가세 계산법 완벽 정리</a>를 참고하세요.</p>
+<p>기한이 중요합니다. 납부 기한은 <strong>수입신고 수리일로부터 15일 이내</strong>이며, 이 기간을 넘기면 통관과 배송이 계속 멈추고 가산금이 붙습니다. 며칠 늦었다고 물건이 사라지는 건 아니지만, 방치할수록 금액만 늘어납니다. 세액이 어떻게 산출된 것인지 궁금하다면 <a href="https://jaylog.co.kr/?p=27">관부가세 계산법 완벽 정리</a>에서 계산 원리를 확인할 수 있습니다. 납부 후에는 유니패스 납부내역에서 영수증을 캡처해 두면, 나중에 반품 시 관세 환급을 신청하거나 세관 소명 요청을 받았을 때 그대로 증빙이 됩니다.</p>
 
-<h2 class="wp-block-heading">납부한 뒤에는 기록을 남겨두자</h2>
-<p>납부 완료 후 유니패스의 납부내역에서 영수증을 확인할 수 있습니다. 캡처해서 보관해 두면 나중에 반품 시 관세 환급을 신청하거나, 세관 소명 요청을 받았을 때 그대로 증빙이 됩니다.</p>
-<p>한 가지 더 — 가족 명의로 주문한 물건의 세금 안내는 <strong>그 가족의 휴대폰</strong>으로 갑니다. 부부가 서로의 통관부호로 주문해 주는 경우, 안내 문자를 못 봐서 기한을 넘기는 일이 의외로 잦습니다. 주문한 사람이 아니라 통관부호 명의자의 문자함을 확인해야 하고, 기한을 넘겼더라도 유니패스에서 가산금 포함 금액으로 바로 납부하면 통관은 재개됩니다.</p>
+<h2 class="wp-block-heading">가족 명의로 주문했다면 문자는 명의자에게 간다</h2>
+<p>의외로 놓치기 쉬운 함정입니다. 세금 안내는 <strong>주문한 사람이 아니라 통관고유부호 명의자의 휴대폰</strong>으로 갑니다. 부부가 서로의 통관부호로 대신 주문해 주거나, 자녀가 부모 명의로 직구한 경우, 정작 주문한 사람은 안내를 못 받고 명의자는 무슨 문자인지 몰라 넘겨 버리는 일이 자주 생깁니다. 그러다 15일 기한이 지나 배송이 멈추고 나서야 뒤늦게 알게 됩니다. 남 명의로 주문했다면, 주문한 사람이 아니라 <strong>명의자의 문자함</strong>을 며칠간 챙겨 보는 게 안전합니다. 기한을 이미 넘겼더라도 유니패스에서 가산금이 포함된 금액으로 바로 납부하면 통관은 다시 진행됩니다.</p>
 
-<p><strong>정리하면</strong> — 진짜 안내는 관세청 알림톡과 특송업체 두 경로뿐이고, 의심되면 링크 대신 유니패스에서 직접 조회하는 것이 가장 확실합니다. 납부는 인터넷지로·카드·대납 중 편한 방법이면 됩니다. 이미 수상한 링크를 눌러 정보를 입력했다면 카드사에 즉시 정지 요청을 하고, 경찰청 사이버범죄 신고(182) 또는 한국인터넷진흥원(118)에 신고하세요.</p>
+<h2 class="wp-block-heading">이미 링크를 누르고 정보를 입력했다면</h2>
+<p>혹시 수상한 링크를 눌러 카드번호나 개인정보를 입력해 버렸다면, 후회보다 속도가 먼저입니다. 곧바로 카드사 고객센터에 전화해 <strong>카드 사용 정지와 재발급</strong>을 요청하고, 부정 결제가 있었는지 최근 내역을 확인하세요. 그다음 <strong>경찰청 사이버범죄 신고 182</strong> 또는 <strong>한국인터넷진흥원 118</strong>에 신고합니다. 이미 결제가 빠져나갔더라도 빠르게 신고하면 지급정지·피해 구제 절차를 밟을 수 있으니, 창피해하지 말고 바로 조치하는 것이 중요합니다.</p>
 
-<!--jaylog-tax-calc-->
-<div id="jaylog-calc" data-preset="0" style="margin:2em 0;padding:24px 20px;border-radius:14px;background:#16233f;color:#f5f0e6;border:1px solid #c9a44a;font-size:16px;line-height:1.7;"><p style="margin:0 0 4px;font-size:20px;font-weight:700;color:#e8c56f;">💰 우리 블로그 관부가세 계산기</p><p style="margin:0 0 16px;font-size:14px;color:#cfc6b3;">사려는 물건의 예상 세금을 바로 확인해 보세요. (2026년 기준)</p><div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;"><label style="flex:1;min-width:130px;">발송 국가<br><select id="jc-country" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;"><option value="us">미국</option><option value="etc" selected>미국 외 (중국·일본·유럽 등)</option></select></label><label style="flex:1;min-width:150px;">품목<br><select id="jc-item" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;"><option value="8,0">일반 생활용품 (관세 8%)</option><option value="13,0">의류·신발 (관세 13%)</option><option value="8,0">가방·지갑·액세서리 (관세 8%)</option><option value="8,1">건강기능식품·영양제 (관세 8%)</option><option value="8,1">화장품·향수 (관세 8%)</option><option value="0,1">스마트폰·노트북·카메라 (관세 0%)</option><option value="8,1">그 밖의 전자제품 (관세 8%)</option></select></label></div><div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;"><label style="flex:1;min-width:130px;">물품 가격 (달러)<br><input id="jc-price" type="number" min="0" placeholder="예: 180" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;"></label><label style="flex:1;min-width:130px;">국제 배송비 (달러)<br><input id="jc-ship" type="number" min="0" placeholder="예: 20" value="0" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;"></label><label style="flex:1;min-width:130px;">환율 (원/달러)<br><input id="jc-fx" type="number" min="0" value="1400" style="width:100%;padding:10px;border-radius:8px;border:1px solid #c9a44a;background:#0f1a30;color:#f5f0e6;font-size:16px;box-sizing:border-box;"></label></div><button id="jc-run" type="button" style="width:100%;padding:14px;border:none;border-radius:8px;background:linear-gradient(135deg,#c9a44a,#e8c56f);color:#16233f;font-size:18px;font-weight:700;cursor:pointer;">계산하기</button><div id="jc-out" style="display:none;margin-top:16px;padding:16px;border-radius:10px;background:#0f1a30;border:1px solid #3a4a6b;"></div><p style="margin:14px 0 0;font-size:12.5px;color:#9f9684;">※ 대표 세율 기준의 참고용 계산입니다. 실제 세액은 품목 분류(HS코드)·환율에 따라 달라질 수 있으니 정확한 금액은 관세청 예상세액 조회(customs.go.kr) 또는 관세청 125로 확인하세요.</p></div>
-<script>(function(){var t=function(s){return s.split('\u00ab').join(String.fromCharCode(60)).split('\u00bb').join(String.fromCharCode(62));};var box=document.getElementById('jaylog-calc');if(!box)return;var pre=parseInt(box.getAttribute('data-preset'))||0;box.querySelector('#jc-item').selectedIndex=pre;box.querySelector('#jc-run').addEventListener('click',function(){var price=parseFloat(box.querySelector('#jc-price').value)||0;var ship=parseFloat(box.querySelector('#jc-ship').value)||0;var fx=parseFloat(box.querySelector('#jc-fx').value)||1400;var us=box.querySelector('#jc-country').value==='us';var opt=box.querySelector('#jc-item').value.split(',');var rate=parseFloat(opt[0])/100,excluded=opt[1]==='1';var out=box.querySelector('#jc-out');out.style.display='block';if(0>=price){out.innerHTML=t('«b style="color:#e8c56f;"»물품 가격을 입력해 주세요.«/b»');return;}var limit=(us&&!excluded)?200:150;var won=function(n){return Math.round(n).toLocaleString('ko-KR')+'원';};if(limit>=price){out.innerHTML=t('«p style="margin:0;font-size:18px;"»«b style="color:#7fd49a;"»✅ 면세 예상«/b» — 물품가격이 '+limit+'달러 이하라 관세·부가세가 없습니다.«/p»'+(excluded?'«p style="margin:8px 0 0;font-size:13.5px;color:#cfc6b3;"»이 품목은 목록통관이 안 되는 품목이라 미국발이어도 기준이 150달러입니다. 수량 제한(영양제 총 6병 등)은 별도로 지켜야 합니다.«/p»':''));return;}var base=(price+ship)*fx;var duty=base*rate;var vat=(base+duty)*0.1;out.innerHTML=t('«p style="margin:0 0 8px;font-size:18px;"»«b style="color:#e8c56f;"»💸 과세 예상«/b» — '+limit+'달러를 넘어 전체 금액에 과세됩니다.«/p»«table style="width:100%;font-size:15px;border-collapse:collapse;"»«tr»«td style="padding:4px 0;color:#cfc6b3;"»과세가격 (물품+배송비)«/td»«td style="text-align:right;"»'+won(base)+'«/td»«/tr»«tr»«td style="padding:4px 0;color:#cfc6b3;"»관세 ('+(rate*100)+'%)«/td»«td style="text-align:right;"»'+won(duty)+'«/td»«/tr»«tr»«td style="padding:4px 0;color:#cfc6b3;"»부가세 (10%)«/td»«td style="text-align:right;"»'+won(vat)+'«/td»«/tr»«tr»«td style="padding:8px 0 0;font-weight:700;color:#e8c56f;border-top:1px solid #3a4a6b;"»총 예상 세금«/td»«td style="padding:8px 0 0;text-align:right;font-weight:700;font-size:18px;color:#e8c56f;border-top:1px solid #3a4a6b;"»'+won(duty+vat)+'«/td»«/tr»«/table»');});})();</script>
+<p>기억할 원칙은 딱 하나입니다. 문자가 진짜처럼 보이든 가짜처럼 보이든, <strong>링크를 누르지 말고 유니패스에 직접 들어가 조회</strong>하면 됩니다. 조회해서 나오면 진짜, 안 나오면 가짜. 이 습관 하나면 아무리 정교한 사기 문자가 와도 흔들릴 일이 없습니다.</p>
 
-<p><em>본 글은 일반 정보 제공 목적이며, 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사 확인이 필요합니다.</em></p>
+<p><em>이 글은 통관 실무 정보를 쉽게 정리한 것으로, 개별 사안의 세액·통관 진행 여부는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 유니패스에서 직접 확인하시기 바랍니다.</em></p>
