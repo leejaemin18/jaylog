@@ -5,6 +5,8 @@ import os, re, json, base64, glob, shutil, datetime, urllib.request, io
 import yaml
 from PIL import Image
 
+from geo_render import render_geo
+
 WP_USER = "claude"
 WP_PW = os.environ["WP_APP_PASSWORD"]
 OPENAI_KEY = os.environ["OPENAI_API_KEY"]
@@ -37,40 +39,6 @@ def openai_image(prompt):
         body = e.read()[:500].decode("utf-8", "replace")
         raise RuntimeError(f"OpenAI 이미지 생성 실패 HTTP {e.code}: {body}") from None
     return base64.b64decode(out["data"][0]["b64_json"])
-
-
-def render_geo(body, meta):
-    """Orca에서 이식한 GEO 구조. 상단 '한눈 요약'(answerSummary) + 하단 FAQ + FAQPage JSON-LD.
-    답변엔진(ChatGPT·Perplexity·AI Overviews)이 우리 글을 인용하기 좋게 만든다.
-    JSON-LD는 '<' 문자가 없는 한 줄로 넣어 wpautop가 깨뜨리지 못하게 한다."""
-    summary = str(meta.get("answer_summary", "")).strip()
-    if summary and "geo-summary" not in body:
-        sm = ('<div class="geo-summary" style="margin:0 0 1.4em;padding:14px 18px;'
-              'border-left:4px solid #c9a44a;background:#f7f4ec;border-radius:6px;'
-              f'font-size:15.5px;line-height:1.7;"><strong>한눈 요약</strong><br>{summary}</div>')
-        body = sm + "\n" + body
-    faq = meta.get("faq") or []
-    if faq and "FAQPage" not in body:
-        items, ld = "", []
-        for it in faq:
-            q = str(it.get("q", "")).replace("<", "").replace(">", "").strip()
-            a = str(it.get("a", "")).replace("<", "").replace(">", "").strip()
-            if not q or not a:
-                continue
-            items += f"<p><strong>Q. {q}</strong><br>{a}</p>\n"
-            ld.append({"@type": "Question", "name": q,
-                       "acceptedAnswer": {"@type": "Answer", "text": a}})
-        if items:
-            jsonld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage",
-                                 "mainEntity": ld}, ensure_ascii=False, separators=(",", ":"))
-            block = ('<h2 class="wp-block-heading">자주 묻는 질문</h2>\n' + items
-                     + '<script type="application/ld+json">' + jsonld + "</script>\n")
-            notice = "<p><em>본 글은 일반 정보"
-            if notice in body:
-                body = body.replace(notice, block + notice, 1)
-            else:
-                body += "\n" + block
-    return body
 
 
 def make_tag_ids(names):

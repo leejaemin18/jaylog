@@ -1,0 +1,30 @@
+name: 기존글 GEO 소급 적용 — 한눈 요약 + FAQ
+
+# geo/backfill.json 데이터로 기존 발행글에 GEO 구조(요약 박스 + FAQ + FAQPage JSON-LD)를 주입한다.
+# 수동 실행 전용(Run workflow). 이미 적용된 글은 자동으로 건너뛴다(멱등).
+# 필요한 시크릿: WP_APP_PASSWORD
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: backfill-geo
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: GEO 소급 적용
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          if [ -z "$WP_APP_PASSWORD" ]; then
+            echo "::error::WP_APP_PASSWORD 시크릿을 먼저 등록하세요."
+            exit 1
+          fi
+          python3 .github/scripts/backfill_geo.py
