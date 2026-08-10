@@ -76,6 +76,8 @@ def process(path):
     title = meta["title"]
     print(f"처리 중: {title}")
     slug = re.sub(r"[^a-z0-9]+", "-", meta.get("slug", os.path.basename(path)[:-3]).lower()).strip("-") or "post"
+    if not meta.get("answer_summary") or not meta.get("faq"):
+        print(f"::warning::{title}: answer_summary/faq 누락 — GEO(요약·FAQ) 미적용. 규칙상 글마다 채워야 함")
 
     def upload_image(brief, suffix):
         """이미지 생성·업로드. 실패(크레딧 소진 등)하면 None을 돌려주고 글은 텍스트로 계속 진행."""
@@ -92,7 +94,8 @@ def process(path):
 
     # 1) 썸네일 (실패해도 텍스트로 등록, '썸네일 필요' 표시)
     media = upload_image(meta["thumbnail_brief"], "thumb")
-    need_image = media is None
+    need_thumb = media is None
+    need_body = False
     if media:
         print(f"  썸네일 업로드: media {media['id']}")
 
@@ -113,7 +116,7 @@ def process(path):
                 else:
                     body += fig
         else:
-            need_image = True
+            need_body = True
     # 본문이미지 마커가 남아 있으면 제거(빈 마커 노출 방지)
     body = body.replace("<!--본문이미지-->", "")
 
@@ -155,7 +158,12 @@ def process(path):
         post["date"] = next_slot()
     created = wp("/posts", "POST", post)
     when = created.get("date", "")
-    tag = " ⚠️썸네일필요" if need_image else ""
+    flags = []
+    if need_thumb:
+        flags.append("썸네일필요")
+    if need_body:
+        flags.append("본문이미지필요")
+    tag = (" ⚠️" + "·".join(flags)) if flags else ""
     mid = media["id"] if media else "없음(썸네일필요)"
     print(f"  등록 완료: post {created['id']} | {created['status']} | {when}{tag}")
 

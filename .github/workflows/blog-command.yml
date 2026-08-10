@@ -36,6 +36,8 @@ on:
           - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
           - site-audit      # 페이지·저자·글수 현황을 review/site-audit.txt로 (애드센스 재점검)
           - enhance-pages   # 소개 페이지 E-E-A-T 보강 + 저자 bio 설정 (애드센스 대응)
+          - geo-audit       # 전 글 GEO(한눈 요약+FAQ) 적용 현황을 review/geo-audit.txt로
+          - backfill-geo    # geo/backfill.json 데이터로 기존 글에 GEO 소급 적용(멱등)
       post_ids:
         description: "trash-posts용: 삭제할 글 id (쉼표 구분, 예: 75,76)"
         required: false
@@ -160,8 +162,26 @@ jobs:
           git commit -m "문의/면책 원문 덤프 [bot]" || echo "변경 없음"
           for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
 
+      - name: GEO 점검 (geo-audit 명령일 때만)
+        if: inputs.command == 'geo-audit'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/geo_audit.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/geo-audit.txt
+          git commit -m "GEO 점검 결과 기록 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+
+      - name: GEO 소급 적용 (backfill-geo 명령일 때만)
+        if: inputs.command == 'backfill-geo'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/backfill_geo.py
+
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
