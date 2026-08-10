@@ -73,37 +73,47 @@ def process(path):
     meta, body = yaml.safe_load(m.group(1)), m.group(2).strip()
     title = meta["title"]
     print(f"처리 중: {title}")
-
-    # 1) 썸네일 생성 + 업로드
-    png = openai_image(meta["thumbnail_brief"])
-    img = Image.open(io.BytesIO(png)).convert("RGB")
-    buf = io.BytesIO()
-    img.save(buf, "JPEG", quality=88, optimize=True)
     slug = re.sub(r"[^a-z0-9]+", "-", meta.get("slug", os.path.basename(path)[:-3]).lower()).strip("-") or "post"
-    media = wp("/media", "POST", raw=buf.getvalue(), ctype="image/jpeg",
-               extra={"Content-Disposition": f'attachment; filename="{slug}-thumb.jpg"'})
-    print(f"  썸네일 업로드: media {media['id']}")
 
-    # 1-b) 본문 이미지 생성 + 업로드 + 삽입 (body_image_brief가 있으면)
+    def upload_image(brief, suffix):
+        """이미지 생성·업로드. 실패(크레딧 소진 등)하면 None을 돌려주고 글은 텍스트로 계속 진행."""
+        try:
+            png = openai_image(brief)
+            im = Image.open(io.BytesIO(png)).convert("RGB")
+            b = io.BytesIO()
+            im.save(b, "JPEG", quality=88, optimize=True)
+            return wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
+                      extra={"Content-Disposition": f'attachment; filename="{slug}-{suffix}.jpg"'})
+        except Exception as e:
+            print(f"::warning::{suffix} 이미지 생성 실패(글은 텍스트로 등록) — {e}")
+            return None
+
+    # 1) 썸네일 (실패해도 텍스트로 등록, '썸네일 필요' 표시)
+    media = upload_image(meta["thumbnail_brief"], "thumb")
+    need_image = media is None
+    if media:
+        print(f"  썸네일 업로드: media {media['id']}")
+
+    # 1-b) 본문 이미지 (body_image_brief가 있고 생성 성공하면 삽입)
     if meta.get("body_image_brief"):
-        png2 = openai_image(meta["body_image_brief"])
-        img2 = Image.open(io.BytesIO(png2)).convert("RGB")
-        buf2 = io.BytesIO()
-        img2.save(buf2, "JPEG", quality=88, optimize=True)
-        media2 = wp("/media", "POST", raw=buf2.getvalue(), ctype="image/jpeg",
-                    extra={"Content-Disposition": f'attachment; filename="{slug}-body.jpg"'})
-        print(f"  본문 이미지 업로드: media {media2['id']}")
-        alt = meta.get("body_image_alt", title)
-        fig = (f'<figure class="wp-block-image size-large">'
-               f'<img src="{media2["source_url"]}" alt="{alt}"/></figure>')
-        if "<!--본문이미지-->" in body:
-            body = body.replace("<!--본문이미지-->", fig, 1)
-        else:  # 마커가 없으면 두 번째 h2 앞(첫 섹션 끝)에 삽입
-            parts = re.split(r"(?=<h2)", body)
-            if len(parts) >= 3:
-                body = parts[0] + parts[1] + fig + "".join(parts[2:])
-            else:
-                body += fig
+        media2 = upload_image(meta["body_image_brief"], "body")
+        if media2:
+            print(f"  본문 이미지 업로드: media {media2['id']}")
+            alt = meta.get("body_image_alt", title)
+            fig = (f'<figure class="wp-block-image size-large">'
+                   f'<img src="{media2["source_url"]}" alt="{alt}"/></figure>')
+            if "<!--본문이미지-->" in body:
+                body = body.replace("<!--본문이미지-->", fig, 1)
+            else:  # 마커가 없으면 두 번째 h2 앞(첫 섹션 끝)에 삽입
+                parts = re.split(r"(?=<h2)", body)
+                if len(parts) >= 3:
+                    body = parts[0] + parts[1] + fig + "".join(parts[2:])
+                else:
+                    body += fig
+        else:
+            need_image = True
+    # 본문이미지 마커가 남아 있으면 제거(빈 마커 노출 방지)
+    body = body.replace("<!--본문이미지-->", "")
 
     # 1-c) 관부가세 계산기 — 세금 계산과 관련된 글이면 계산기 전용 페이지로 가는 버튼 링크를 넣는다.
     # (예전엔 계산기 위젯 HTML을 글마다 인라인 복붙했으나, 애드센스가 '복붙 중복'으로 감점 →
@@ -126,9 +136,11 @@ def process(path):
     mode = meta.get("schedule", "auto")
     post = {
         "title": title, "content": body, "categories": [int(meta.get("category", 6))],
-        "featured_media": media["id"], "tags": make_tag_ids(meta.get("tags", [])),
+        "tags": make_tag_ids(meta.get("tags", [])),
         "excerpt": meta.get("excerpt", ""),
     }
+    if media:
+        post["featured_media"] = media["id"]
     if mode == "now":
         post["status"] = "publish"
     elif mode == "draft":
@@ -138,16 +150,18 @@ def process(path):
         post["date"] = next_slot()
     created = wp("/posts", "POST", post)
     when = created.get("date", "")
-    print(f"  등록 완료: post {created['id']} | {created['status']} | {when}")
+    tag = " ⚠️썸네일필요" if need_image else ""
+    mid = media["id"] if media else "없음(썸네일필요)"
+    print(f"  등록 완료: post {created['id']} | {created['status']} | {when}{tag}")
 
     # 3) 초안 파일을 published/로 이동 + 기록
     os.makedirs("published", exist_ok=True)
     dest = os.path.join("published", os.path.basename(path))
     shutil.move(path, dest)
     with open(dest, "a", encoding="utf-8") as f:
-        f.write(f"\n\n<!-- 등록됨: post {created['id']} / {created['status']} / {when} / media {media['id']} -->\n")
+        f.write(f"\n\n<!-- 등록됨: post {created['id']} / {created['status']} / {when} / media {mid} -->\n")
     with open("작성현황.md", "a", encoding="utf-8") as f:
-        f.write(f"\n- [클라우드 자동] {title} → post {created['id']} ({created['status']} {when})")
+        f.write(f"\n- [클라우드 자동] {title} → post {created['id']} ({created['status']} {when}){tag}")
     return True
 
 
