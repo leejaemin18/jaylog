@@ -28,6 +28,9 @@ jobs:
       - name: 준비물 설치
         run: pip install --quiet pyyaml pillow
 
+      - name: AI 티 게이트 (발행 전 점검 — 비차단 경고)
+        run: python3 .github/scripts/humanize_gate.py
+
       - name: 초안 처리
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}

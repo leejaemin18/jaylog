@@ -18,3 +18,6 @@ Thumbs.db
 .DS_Store
 desktop.ini
 __pycache__/
+
+# humanize-korean 런타임 산출물
+_workspace/
