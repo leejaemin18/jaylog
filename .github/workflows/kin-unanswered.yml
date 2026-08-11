@@ -1,0 +1,42 @@
+name: 지식iN 미답변 질문 수집
+
+# 네이버 검색 API로 최근 질문을 모아, 각 질문 페이지를 열어 '답변 0개'인 것만 research/에 저장한다.
+# 블로그 홍보용 답글 달 대상(아직 답 없는 질문)을 고르는 용도.
+# 필요한 시크릿: NAVER_CLIENT_ID, NAVER_CLIENT_SECRET
+
+on:
+  workflow_dispatch:
+    inputs:
+      keywords:
+        description: "검색 키워드 (쉼표 구분)"
+        required: false
+        default: "해외직구 관세,통관,개인통관고유부호,관부가세,직구 세금,영양제 직구,배대지"
+      want:
+        description: "찾을 미답변 개수"
+        required: false
+        default: "8"
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 미답변 질문 수집
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          KEYWORDS: ${{ inputs.keywords }}
+          WANT: ${{ inputs.want }}
+        run: |
+          if [ -z "$NAVER_CLIENT_ID" ] || [ -z "$NAVER_CLIENT_SECRET" ]; then
+            echo "::error::NAVER_CLIENT_ID / NAVER_CLIENT_SECRET 시크릿이 필요합니다."
+            exit 1
+          fi
+          python3 .github/scripts/kin_unanswered.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add research/
+          git commit -m "지식iN 미답변 질문 수집 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
