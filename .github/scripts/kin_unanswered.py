@@ -15,8 +15,9 @@ KST = datetime.timezone(datetime.timedelta(hours=9))
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/125.0 Safari/537.36")
 
-# 관세·무역·직구·통관이 걸리는 지식iN 디렉터리(dirId)
-DIRS = ["40310", "40502", "40501", "4030201", "80101", "512"]
+# 관세·무역·직구·통관이 몰리는 지식iN 디렉터리(dirId)
+# 5040106 = 쇼핑>해외직구 (직구 질문 핵심), 40310/40502 = 경제>무역/관세, 512 = 쇼핑
+DIRS = ["5040106", "40310", "40502", "512", "40501"]
 
 
 def get(url):
@@ -112,13 +113,17 @@ def main():
             uniq.append(u)
     print(f"후보 {len(uniq)}건(중복 제외) — 답변수 확인 시작")
 
+    # 관세·직구·통관 관련 제목만 남기기 위한 키워드
+    TOPIC = re.compile(r"관세|관부가세|통관|직구|해외구매|면세|배대지|배송대행|개인통관|유니패스|"
+                       r"관세청|알리|테무|아마존|아이허브|타오바오|이베이|직배송|구매대행|"
+                       r"부가세|HS코드|전파인증|반품.*관세|영양제.*직구|직구.*세금|합산과세")
     unanswered, fetched = [], 0
     for u in uniq:
         if fetched >= MAX_FETCH or len(unanswered) >= WANT:
             break
         fetched += 1
         cnt, title = detail(u)
-        if cnt == 0 and title:
+        if cnt == 0 and title and TOPIC.search(title):
             unanswered.append((title, u))
             print(f"[미답변] {title[:40]}")
 
