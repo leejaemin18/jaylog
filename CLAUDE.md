@@ -34,6 +34,11 @@
 - 예약발행 누락은 GitHub Actions(`wp-cron-ping.yml`)가 매시간 깨워서 보완함.
 - 폰/원격 발행·예약: GitHub Actions `blog-command.yml` (Run workflow → status / publish-one / schedule-queue).
 - 글감 조사: GitHub Actions `kin-research.yml` (Run workflow → 키워드 입력) — 네이버 지식iN 질문 목록을 `research/`에 수집. 인증은 시크릿 NAVER_CLIENT_ID/SECRET.
+- **지식iN 답글(블로그 홍보) — 미답변 질문에 답변 (2026-08-15 지시)**:
+  - **⛔ 제목만 보고 답하지 말 것.** 반드시 `kin-fetch.yml`(docId 입력)로 **질문 원문을 가져와** 질문자가 실제로 뭘 궁금해하는지 파악한 뒤 그에 정확히 맞춰 답한다. (제목만 보면 엉뚱한 답이 나온다 — 실제 사례 있음: '디카 통관' 질문의 핵심은 세금이 아니라 전파인증 수량+같은날 입항이었음.)
+  - 미답변 질문 수집은 `kin-unanswered.yml`(검색 API로 최근 질문→각 페이지 답변수 확인→답변 0개만). 답변된 질문·오래된 질문은 건너뛴다.
+  - 답변은 그 자체로 도움이 되게 충실히, **링크는 말미에 1개만**(`https://jaylog.co.kr/?p=<id>` 형태, 발행글만). 하루 2~3개까지만(스팸·계정 보호). 붙이기 직전 여전히 미답변인지 확인.
+  - 규정·수치는 정확히(면세 150달러·미국 200달러, 합산과세는 '입항일'이 아니라 '같은 판매자+같은날 구매' 기준 등). 초안 작성물은 `research/지식인-답변팩-NN.md`에 기록.
 
 ## 🗂️ 환경별 역할
 - **폰/클라우드(claude.ai) 등 키 없는 환경**: 글 초안을 아래 형식으로 `drafts/` 폴더에 저장하고 커밋·푸시만 하면 끝. **GitHub Actions(`publish-draft.yml`)가 자동으로 썸네일 생성 → 워드프레스 등록 → 하루 1개 예약**까지 처리한다 (PC 불필요).
