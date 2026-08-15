@@ -1,0 +1,37 @@
+name: 지식iN 질문 원문 가져오기
+
+# 지식iN 질문 1건의 본문을 러너에서 받아 research/지식인-질문-<docId>.txt 로 저장(정확 분석용).
+on:
+  workflow_dispatch:
+    inputs:
+      docid:
+        description: "질문 docId (예: 494724867)"
+        required: true
+      d1id:
+        description: "d1id (선택)"
+        required: false
+        default: ""
+      dirid:
+        description: "dirId (선택)"
+        required: false
+        default: ""
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 질문 원문 가져오기
+        env:
+          QDOCID: ${{ inputs.docid }}
+          QD1ID: ${{ inputs.d1id }}
+          QDIRID: ${{ inputs.dirid }}
+        run: |
+          python3 .github/scripts/kin_fetch.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add research/
+          git commit -m "지식iN 질문 원문 가져오기 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
