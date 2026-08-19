@@ -12,9 +12,12 @@ def render_geo(body, meta):
     이미 주입된 글(geo-summary/FAQPage 존재)은 중복 삽입하지 않는다(멱등)."""
     summary = str(meta.get("answer_summary", "")).strip()
     if summary and "geo-summary" not in body:
-        sm = ('<div class="geo-summary" style="margin:0 0 1.4em;padding:14px 18px;'
-              'border-left:4px solid #c9a44a;background:#f7f4ec;border-radius:6px;'
-              f'font-size:15.5px;line-height:1.7;"><strong>한눈 요약</strong><br>{summary}</div>')
+        sm = ('<div class="geo-summary" style="margin:0 0 1.5em;padding:18px 20px;'
+              'border-left:5px solid #c9a44a;background:#f7f4ec;border-radius:8px;'
+              'font-size:17.5px;line-height:1.75;">'
+              '<strong style="display:block;font-size:15px;color:#a9822f;'
+              'letter-spacing:.02em;margin-bottom:4px;">📌 한눈 요약</strong>'
+              f'{summary}</div>')
         body = sm + "\n" + body
     faq = meta.get("faq") or []
     if faq and "FAQPage" not in body:
