@@ -1,7 +1,7 @@
 # [333] 직구 저가신고(언더밸류) 하면 정말 걸릴까 — 적발되는 방식과 진짜 불이익
 
 - status: publish / date: 2026-08-17T00:59:50 / link: https://jaylog.co.kr/%ec%a7%81%ea%b5%ac-%ec%a0%80%ea%b0%80%ec%8b%a0%ea%b3%a0%ec%96%b8%eb%8d%94%eb%b0%b8%eb%a5%98-%ed%95%98%eb%a9%b4-%ec%a0%95%eb%a7%90-%ea%b1%b8%eb%a6%b4%ea%b9%8c-%ec%a0%81%eb%b0%9c%eb%90%98/
-- 글자수(공백제외): 2770 / h2: 6 / 표: 0 / 리스트: 1
+- 글자수(공백제외): 2748 / h2: 6 / 표: 0 / 리스트: 1
 - 내부링크: 1 / 외부링크: 1 / 이미지: 1(alt 1)
 - excerpt: 세금을 줄이려 실제보다 낮게 신고하는 저가신고가 어떻게 적발되고 어떤 불이익으로 돌아오는지 정리했다.
 
@@ -36,8 +36,8 @@
 <h2 class="wp-block-heading">정직한 신고가 결국 더 싸다</h2>
 <p>세금을 줄이는 합법적인 길은 따로 있습니다. 면세 한도(물품가격 150달러, 미국발 특송 200달러) 안에서 나눠 구매하거나, 서로 다른 판매자·다른 날짜로 주문해 합산과세를 피하거나, FTA 체결국 물건이면 원산지증명을 갖춰 협정세율(품목에 따라 관세 0%)을 적용받는 식입니다. 이런 방법은 걸릴 걱정 없이 세금을 실제로 줄여줍니다. 반대로 가격을 속이는 방법은 잠깐 세금을 미룰 뿐, 걸리는 순간 아낀 것보다 훨씬 큰 비용으로 되돌아옵니다. 내 물건에 세금이 얼마나 나오는지 <a href="https://jaylog.co.kr/?p=19">면세 기준</a>을 알고 정직하게 신고하는 것이, 마음 편하고 지갑에도 결국 이득입니다.</p>
 
-<p><em>이 글은 2026년 8월 기준 일반 정보이며, 구체적 처벌·과세는 사안에 따라 다릅니다. 정확한 내용은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사에게 확인하시기 바랍니다.</em></p>
-<p style="text-align:center;margin:1.6em 0;"><a href="https://jaylog.co.kr/gwanbuga-calculator/" style="display:inline-block;padding:12px 26px;background:#16233f;color:#e8c56f;border:1px solid #c9a44a;border-radius:8px;font-weight:700;text-decoration:none;">💰 관부가세 계산기로 내 예상 세금 계산하기 →</a></p>
+<p><em>구체적 처벌·과세는 사안에 따라 다르니, 정확한 내용은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)이나 관세사에게 확인해 보세요.</em></p>
+<p style="text-align:center;margin:1.6em 0;"><a href="https://jaylog.co.kr/gwanbuga-calculator/" style="display:inline-block;padding:12px 26px;background:#16233f;color:#e8c56f;border:1px solid #c9a44a;border-radius:8px;font-weight:700;text-decoration:none;">💰 정직하게 신고하면 세금 얼마인지 계산하기 →</a></p>
 <h2 class="wp-block-heading">자주 묻는 질문</h2>
 <p><strong>Q. 판매자가 알아서 낮춰 신고해준다는데 괜찮나요?</strong><br>위험합니다. 신고 가격이 낮아 이득을 본 사람은 구매자라, 판매자가 낮춰 적었어도 책임은 명의자인 구매자에게 돌아옵니다. 특히 낮춰 달라고 요청한 메시지가 남아 있으면 고의를 입증하는 증거가 되니 삼가야 합니다.</p>
 <p><strong>Q. 저가신고는 어떻게 적발되나요?</strong><br>세관은 품목별 가격 자료와 유사물품 거래가를 갖고 있어 시세보다 지나치게 낮은 신고를 걸러냅니다. 검사 대상이 되면 카드 결제내역·주문 캡처와 대조하고, 브랜드 제품은 시가로 다시 평가합니다. 무작위 검사로 걸리기도 합니다.</p>
