@@ -1,0 +1,32 @@
+name: 대표 썸네일 교체(로컬 이미지)
+
+# 저장소에 커밋해둔 로컬 이미지 파일을 워드프레스 미디어로 올리고
+# 지정한 글의 대표(썸네일) 이미지로 설정한다. OpenAI API 미사용(비용 0).
+# 폰/브라우저에서 Run workflow → post_id, image 입력.
+# 필요한 시크릿: WP_APP_PASSWORD
+
+on:
+  workflow_dispatch:
+    inputs:
+      post_id:
+        description: "대상 글 번호"
+        required: true
+      image:
+        description: "로컬 이미지 경로 (예: drafts/img/xxx-thumb.png)"
+        required: true
+
+jobs:
+  swap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pillow
+      - name: 대표 썸네일 교체
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          POST_ID: ${{ inputs.post_id }}
+          IMAGE: ${{ inputs.image }}
+        run: python3 .github/scripts/swap_thumb.py
