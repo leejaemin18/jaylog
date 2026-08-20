@@ -66,4 +66,4 @@ body_image_alt: 밝은 배경에 쇼핑 앱을 띄운 스마트폰과 해외에�
 <p><em>이 글은 2026년 8월 기준 일반 정보이며, 앱·규정은 바뀔 수 있습니다. 정확한 통관·과세는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에서 확인하시기 바랍니다.</em></p>
 
 
-<!-- 등록됨: post 351 / publish / 2026-08-20T09:28:32 / 본문 media 350(드라이브) / 썸네일 API media 349 → 드라이브 것으로 교체 예정 -->
+<!-- 등록됨: post 351 / publish / 2026-08-20T09:28:32 / 본문 media 350(드라이브) / 썸네일 드라이브 이미지로 교체 완료(swap-thumb.yml) -->
