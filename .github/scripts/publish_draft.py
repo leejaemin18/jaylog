@@ -80,16 +80,34 @@ def process(path):
         print(f"::warning::{title}: answer_summary/faq 누락 — GEO(요약·FAQ) 미적용. 규칙상 글마다 채워야 함")
 
     def upload_image(brief, suffix):
-        """이미지 생성·업로드. 실패(크레딧 소진 등)하면 None을 돌려주고 글은 텍스트로 계속 진행."""
+        """이미지 업로드. 우선순위: drafts/img/<슬러그>-<suffix>.(png|jpg…) 로컬 파일이 있으면
+        그걸 쓰고(OpenAI Plus→드라이브→저장소 경유, API 비용 0), 없으면 OpenAI API로 생성.
+        실패하면 None을 돌려주고 글은 텍스트로 계속 진행. 사용한 로컬 파일은 처리 후 삭제."""
+        local = None
+        for ext in ("png", "jpg", "jpeg", "webp"):
+            p = f"drafts/img/{slug}-{suffix}.{ext}"
+            if os.path.exists(p):
+                local = p
+                break
         try:
-            png = openai_image(brief)
-            im = Image.open(io.BytesIO(png)).convert("RGB")
+            if local:
+                im = Image.open(local).convert("RGB")
+                print(f"  로컬 이미지 사용(API 미호출): {local}")
+            else:
+                png = openai_image(brief)
+                im = Image.open(io.BytesIO(png)).convert("RGB")
             b = io.BytesIO()
             im.save(b, "JPEG", quality=88, optimize=True)
-            return wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
-                      extra={"Content-Disposition": f'attachment; filename="{slug}-{suffix}.jpg"'})
+            media = wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
+                       extra={"Content-Disposition": f'attachment; filename="{slug}-{suffix}.jpg"'})
+            if local:
+                try:
+                    os.remove(local)
+                except OSError:
+                    pass
+            return media
         except Exception as e:
-            print(f"::warning::{suffix} 이미지 생성 실패(글은 텍스트로 등록) — {e}")
+            print(f"::warning::{suffix} 이미지 처리 실패(글은 텍스트로 등록) — {e}")
             return None
 
     # 1) 썸네일 (실패해도 텍스트로 등록, '썸네일 필요' 표시)
