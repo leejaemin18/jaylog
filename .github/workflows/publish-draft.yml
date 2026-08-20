@@ -4,7 +4,7 @@ name: 초안 자동 등록 — 썸네일 생성 + 워드프레스 예약
 #   1) 초안의 썸네일 브리프로 OpenAI 이미지 생성
 #   2) 워드프레스에 업로드 + 글 등록 (하루 1개씩 예약 큐 맨 뒤에)
 #   3) 처리한 초안을 published/ 폴더로 이동
-# 필요한 시크릿: WP_APP_PASSWORD, OPENAI_API_KEY
+# 필요한 시크릿: WP_APP_PASSWORD (이미지는 드라이브 로컬 파일만 사용 — OpenAI API 미호출)
 # (Settings > Secrets and variables > Actions 에 등록)
 
 on:
@@ -34,10 +34,10 @@ jobs:
       - name: 초안 처리
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          if [ -z "$WP_APP_PASSWORD" ] || [ -z "$OPENAI_API_KEY" ]; then
-            echo "::error::WP_APP_PASSWORD / OPENAI_API_KEY 시크릿을 먼저 등록하세요."
+          # 이미지는 드라이브(OpenAI Plus)로 받은 로컬 파일만 사용. OpenAI 이미지 API는 호출하지 않는다(사용자 지시 2026-08-20).
+          if [ -z "$WP_APP_PASSWORD" ]; then
+            echo "::error::WP_APP_PASSWORD 시크릿을 먼저 등록하세요."
             exit 1
           fi
           python3 .github/scripts/publish_draft.py

@@ -30,7 +30,7 @@ on:
           - set-focus       # 글별 Rank Math 포커스 키워드 설정 시도+검증
           - seo-audit       # 전 글 SEO 점검 + 빈 요약 자동 채움
           - add-related     # 내부링크 부족 글에 관련글 블록 추가
-          - add-body-images # 본문 이미지 없는 옛날 글에 이미지 생성·삽입(OpenAI)
+          - add-body-images # ⚠️유료 OpenAI API — post_ids 칸에 confirm=yes 넣어야 실행(허락 필요)
           - export-content  # 발행·예약 글 전체 본문을 review/ 폴더로 내려받아 커밋(품질 평가용)
           - create-calculator-page # 관부가세 계산기 전용 페이지 생성/갱신 (글은 링크만)
           - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
@@ -100,12 +100,18 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: python3 .github/scripts/add_related_links.py
 
-      - name: 본문 이미지 추가 (add-body-images 명령일 때만)
+      - name: 본문 이미지 추가 (add-body-images 명령일 때만 · ⚠️유료 OpenAI API)
         if: inputs.command == 'add-body-images'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          # 사용자 지시(2026-08-20): 허락 없이 OpenAI 이미지 API를 호출하지 않는다.
+          # 이 명령은 유료 API를 쓰므로 post_ids 칸에 confirm=yes 를 넣어야만 실행된다.
+          if [ "${{ inputs.post_ids }}" != "confirm=yes" ]; then
+            echo "::error::add-body-images 는 유료 OpenAI API를 씁니다. post_ids 칸에 confirm=yes 를 입력해야 실행됩니다."
+            exit 1
+          fi
           pip install --quiet pillow
           python3 .github/scripts/add_body_images.py
 

@@ -1,7 +1,8 @@
-name: 텍스트 등록글에 이미지 채우기
+name: 텍스트 등록글에 이미지 채우기(⚠️유료 OpenAI API)
 
-# 크레딧 소진으로 '썸네일 필요' 상태로 등록된 글에 나중에 이미지를 채운다.
-# Run workflow → file 칸에 published/<슬러그>.md 경로 입력.
+# ⚠️ 이 워크플로는 OpenAI 이미지 API(유료)를 호출한다. 사용자 지시(2026-08-20)로
+#    허락 없이는 API를 쓰지 않는다 → confirm 칸에 'yes'를 직접 입력해야만 실행된다.
+#    평소 이미지는 드라이브(OpenAI Plus)로 받아 swap-thumb / drafts/img 로 넣는다.
 # 필요한 시크릿: WP_APP_PASSWORD, OPENAI_API_KEY
 
 on:
@@ -11,11 +12,22 @@ on:
         description: "published/<슬러그>.md 경로"
         required: true
         type: string
+      confirm:
+        description: "유료 OpenAI API 호출에 동의하면 yes 입력"
+        required: true
+        default: "no"
+        type: string
 
 jobs:
   add-images:
     runs-on: ubuntu-latest
     steps:
+      - name: 유료 API 동의 확인
+        run: |
+          if [ "${{ inputs.confirm }}" != "yes" ]; then
+            echo "::error::confirm=yes 가 아니면 실행하지 않습니다(유료 OpenAI API 보호)."
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:

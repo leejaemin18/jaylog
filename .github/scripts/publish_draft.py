@@ -9,7 +9,6 @@ from geo_render import render_geo
 
 WP_USER = "claude"
 WP_PW = os.environ["WP_APP_PASSWORD"]
-OPENAI_KEY = os.environ["OPENAI_API_KEY"]
 API = "https://jaylog.co.kr/wp-json/wp/v2"
 AUTH = base64.b64encode(f"{WP_USER}:{WP_PW}".encode()).decode()
 KST = datetime.timezone(datetime.timedelta(hours=9))
@@ -24,21 +23,6 @@ def wp(path, method="GET", data=None, raw=None, ctype="application/json", extra=
     req = urllib.request.Request(API + path, method=method, headers=headers, data=body)
     with urllib.request.urlopen(req, timeout=120) as res:
         return json.load(res)
-
-
-def openai_image(prompt):
-    payload = {"model": "gpt-image-2", "prompt": prompt, "size": "1536x1024", "quality": "high"}
-    req = urllib.request.Request(
-        "https://api.openai.com/v1/images/generations", method="POST",
-        headers={"Authorization": f"Bearer {OPENAI_KEY}", "Content-Type": "application/json"},
-        data=json.dumps(payload).encode())
-    try:
-        with urllib.request.urlopen(req, timeout=300) as res:
-            out = json.load(res)
-    except urllib.error.HTTPError as e:
-        body = e.read()[:500].decode("utf-8", "replace")
-        raise RuntimeError(f"OpenAI 이미지 생성 실패 HTTP {e.code}: {body}") from None
-    return base64.b64decode(out["data"][0]["b64_json"])
 
 
 def make_tag_ids(names):
@@ -89,13 +73,14 @@ def process(path):
             if os.path.exists(p):
                 local = p
                 break
+        if not local:
+            # 사용자 지시(2026-08-20): 허락 없이 OpenAI 이미지 API를 호출하지 않는다.
+            # 로컬 드라이브 이미지가 없으면 이미지 없이 텍스트로 등록하고 '필요' 표시만 남긴다.
+            print(f"::warning::{suffix} 로컬 이미지 없음 → API 미호출(정책). 텍스트로 등록, '{suffix} 필요' 표시")
+            return None
         try:
-            if local:
-                im = Image.open(local).convert("RGB")
-                print(f"  로컬 이미지 사용(API 미호출): {local}")
-            else:
-                png = openai_image(brief)
-                im = Image.open(io.BytesIO(png)).convert("RGB")
+            im = Image.open(local).convert("RGB")
+            print(f"  로컬 이미지 사용(API 미호출): {local}")
             b = io.BytesIO()
             im.save(b, "JPEG", quality=88, optimize=True)
             media = wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
