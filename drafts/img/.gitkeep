@@ -1,0 +1,2 @@
+# 드라이브(OpenAI Plus)로 받은 글별 이미지 임시 보관.
+# publish_draft.py가 <슬러그>-thumb.* / <슬러그>-body.* 를 찾아 쓰고 처리 후 삭제.

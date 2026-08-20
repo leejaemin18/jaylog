@@ -47,5 +47,13 @@ jobs:
           git config user.name "jaylog-bot"
           git config user.email "actions@github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "자동 처리: 초안 등록 완료 [bot]"
-          git push
+          git diff --cached --quiet && { echo "커밋할 변경 없음"; exit 0; }
+          git commit -m "자동 처리: 초안 등록 완료 [bot]"
+          # 다른 커밋(수동/다른 워크플로)과 충돌해도 rebase 후 재시도 —
+          # 초안이 published/로 확실히 옮겨져야 다음 실행 때 중복 등록을 막는다.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin main && { echo "푸시 완료"; exit 0; }
+            echo "::warning::푸시 충돌, 재시도 $i"; git rebase --abort 2>/dev/null || true; sleep $((2**i))
+          done
+          echo "::error::푸시 최종 실패 — 초안이 이미 WP에 등록됐을 수 있으니 drafts/ 상태를 수동 확인하세요."
+          exit 1

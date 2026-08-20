@@ -125,7 +125,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/
           git commit -m "본문 내보내기: 품질 평가용 review/ 갱신 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 계산기 페이지 생성 (create-calculator-page 명령일 때만)
         if: inputs.command == 'create-calculator-page'
@@ -137,7 +137,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/calc-page.txt
           git commit -m "계산기 페이지 링크 기록 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 수정본 적용 (apply-revisions 명령일 때만)
         if: inputs.command == 'apply-revisions'
@@ -155,7 +155,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/site-audit.txt
           git commit -m "사이트 감사 결과 기록 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 페이지 보강 (enhance-pages 명령일 때만)
         if: inputs.command == 'enhance-pages'
@@ -167,7 +167,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/pages-contact-disclaimer.txt
           git commit -m "문의/면책 원문 덤프 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: GEO 점검 (geo-audit 명령일 때만)
         if: inputs.command == 'geo-audit'
@@ -179,7 +179,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/geo-audit.txt
           git commit -m "GEO 점검 결과 기록 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: GEO 소급 적용 (backfill-geo 명령일 때만)
         if: inputs.command == 'backfill-geo'
@@ -198,7 +198,7 @@ jobs:
           git config user.email "noreply@anthropic.com"
           git add review/humanize-audit.txt
           git commit -m "AI 티 점검 결과 기록 [bot]" || echo "변경 없음"
-          for i in 1 2 3 4; do git push && break || sleep $((2**i)); done
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 블로그 명령 실행
         if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo' && inputs.command != 'humanize-audit'
