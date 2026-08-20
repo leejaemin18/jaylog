@@ -21,3 +21,7 @@ __pycache__/
 
 # humanize-korean 런타임 산출물
 _workspace/
+
+# 드라이브 경유 이미지(발행용)는 추적
+!drafts/img/
+!drafts/img/*
