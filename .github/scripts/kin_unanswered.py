@@ -74,7 +74,7 @@ def detail(url):
     """질문 페이지에서 (답변수, 제목). 답변수 미확인이면 (-1, title)."""
     m = re.search(r"docId=(\d+)", url)
     if not m:
-        return -1, ""
+        return -1, "", None
     d1 = re.search(r"d1id=(\d+)", url)
     dr = re.search(r"dirId=(\d+)", url)
     murl = "https://m.kin.naver.com/mobile/qna/detail.naver?" + urllib.parse.urlencode(
@@ -83,17 +83,19 @@ def detail(url):
                             ("docId", m.group(1))] if v})
     h = get(murl)
     if not h:
-        return -1, ""
+        return -1, "", None
     title = ""
     mt = re.search(r'<meta property="og:title" content="([^"]*)"', h) or re.search(r"<title>([^<]*)</title>", h)
     if mt:
         title = html.unescape(mt.group(1)).replace(" : 지식iN", "").replace("네이버 지식iN", "").strip()
     if any(s in h for s in ("아직 답변이 없습니다", "첫 번째 답변", "등록된 답변이 없습니다", "답변을 기다리는")):
-        return 0, title
+        return 0, title, None
+    # 채택된 답변(베스트) 여부: JSON isChosen 우선, 없으면 텍스트 마커
+    accepted = bool(re.search(r'"isChosen"\s*:\s*true', h) or re.search(r'채택답변|채택된\s*답변', h))
     mm = re.search(r'"answerCount"\s*:\s*(\d+)', h) or re.search(r'답변\s*(\d+)\s*개', h)
     if mm:
-        return int(mm.group(1)), title
-    return -1, title
+        return int(mm.group(1)), title, accepted
+    return -1, title, accepted
 
 
 def main():
@@ -117,14 +119,14 @@ def main():
     TOPIC = re.compile(r"관세|관부가세|통관|직구|해외구매|면세|배대지|배송대행|개인통관|유니패스|"
                        r"관세청|알리|테무|아마존|아이허브|타오바오|이베이|직배송|구매대행|"
                        r"부가세|HS코드|전파인증|반품.*관세|영양제.*직구|직구.*세금|합산과세")
-    unanswered, fetched = [], 0
+    unanswered, unaccepted, fetched = [], [], 0  # 답변0 / 답변있지만 채택없음
     stat = {"cnt0": 0, "cntpos": 0, "undet": 0, "topic0": 0}  # 진단용
     samples = []
     for u in uniq:
-        if fetched >= MAX_FETCH or len(unanswered) >= WANT:
+        if fetched >= MAX_FETCH or (len(unanswered) + len(unaccepted)) >= WANT:
             break
         fetched += 1
-        cnt, title = detail(u)
+        cnt, title, accepted = detail(u)
         if cnt == 0:
             stat["cnt0"] += 1
         elif cnt > 0:
@@ -132,31 +134,42 @@ def main():
         else:
             stat["undet"] += 1
         if len(samples) < 8:
-            samples.append((cnt, (title or "")[:34], u))
-        if cnt == 0 and title:
-            if TOPIC.search(title):
-                unanswered.append((title, u))
-                print(f"[미답변] {title[:40]}")
-            else:
+            samples.append((cnt, accepted, (title or "")[:34], u))
+        if not (title and TOPIC.search(title)):
+            if cnt == 0:
                 stat["topic0"] += 1
+            continue
+        if cnt == 0:
+            unanswered.append((title, u))
+            print(f"[미답변] {title[:40]}")
+        elif cnt > 0 and accepted is False:
+            unaccepted.append((title, u, cnt))
+            print(f"[미채택 답변{cnt}] {title[:40]}")
     print(f"[진단] 답변0={stat['cnt0']} 답변있음={stat['cntpos']} 미확정(-1)={stat['undet']} 주제불일치제외={stat['topic0']}")
 
-    lines = [f"# 지식iN 미답변 질문 — {now:%Y-%m-%d %H:%M} (KST)", "",
-             f"후보 {len(uniq)} · 조회 {fetched} · 미답변 {len(unanswered)}건", "",
+    lines = [f"# 지식iN 답글 대상 — {now:%Y-%m-%d %H:%M} (KST)", "",
+             f"후보 {len(uniq)} · 조회 {fetched} · 미답변 {len(unanswered)}건 · 미채택 {len(unaccepted)}건", "",
              f"[진단] 답변0={stat['cnt0']} 답변있음={stat['cntpos']} 미확정(-1)={stat['undet']} 주제불일치제외={stat['topic0']}",
-             "[샘플(답변수 / 제목)]"]
-    for cnt, ti, uu in samples:
-        lines.append(f"  - cnt={cnt} | {ti} | {uu}")
+             "[샘플(답변수 / 채택 / 제목)]"]
+    for cnt, acc, ti, uu in samples:
+        lines.append(f"  - cnt={cnt} accepted={acc} | {ti} | {uu}")
     lines.append("")
-    for t, u in unanswered:
-        lines.append(f"- {t}\n  {u}")
+    if unanswered:
+        lines.append("## 미답변(답변 0개) — 최우선")
+        for t, u in unanswered:
+            lines.append(f"- {t}\n  {u}")
+        lines.append("")
+    if unaccepted:
+        lines.append("## 채택 답변 없음(답변은 있으나 베스트 미선정) — 채택 노려볼 대상")
+        for t, u, c in unaccepted:
+            lines.append(f"- {t} (답변 {c}개)\n  {u}")
     os.makedirs("research", exist_ok=True)
     path = f"research/지식인-미답변-{now:%Y%m%d-%H%M}.md"
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
-    print(f"\n저장: {path} — 미답변 {len(unanswered)}건")
-    if not unanswered:
-        print("::warning::미답변 질문 0건 — 목록 엔드포인트 구조가 바뀌었을 수 있음.")
+    print(f"\n저장: {path} — 미답변 {len(unanswered)} · 미채택 {len(unaccepted)}")
+    if not unanswered and not unaccepted:
+        print("::warning::대상 0건 — 목록 엔드포인트/파싱 구조가 바뀌었을 수 있음.")
 
 
 if __name__ == "__main__":
