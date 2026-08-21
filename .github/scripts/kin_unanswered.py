@@ -118,17 +118,36 @@ def main():
                        r"관세청|알리|테무|아마존|아이허브|타오바오|이베이|직배송|구매대행|"
                        r"부가세|HS코드|전파인증|반품.*관세|영양제.*직구|직구.*세금|합산과세")
     unanswered, fetched = [], 0
+    stat = {"cnt0": 0, "cntpos": 0, "undet": 0, "topic0": 0}  # 진단용
+    samples = []
     for u in uniq:
         if fetched >= MAX_FETCH or len(unanswered) >= WANT:
             break
         fetched += 1
         cnt, title = detail(u)
-        if cnt == 0 and title and TOPIC.search(title):
-            unanswered.append((title, u))
-            print(f"[미답변] {title[:40]}")
+        if cnt == 0:
+            stat["cnt0"] += 1
+        elif cnt > 0:
+            stat["cntpos"] += 1
+        else:
+            stat["undet"] += 1
+        if len(samples) < 8:
+            samples.append((cnt, (title or "")[:34], u))
+        if cnt == 0 and title:
+            if TOPIC.search(title):
+                unanswered.append((title, u))
+                print(f"[미답변] {title[:40]}")
+            else:
+                stat["topic0"] += 1
+    print(f"[진단] 답변0={stat['cnt0']} 답변있음={stat['cntpos']} 미확정(-1)={stat['undet']} 주제불일치제외={stat['topic0']}")
 
     lines = [f"# 지식iN 미답변 질문 — {now:%Y-%m-%d %H:%M} (KST)", "",
-             f"후보 {len(uniq)} · 조회 {fetched} · 미답변 {len(unanswered)}건", ""]
+             f"후보 {len(uniq)} · 조회 {fetched} · 미답변 {len(unanswered)}건", "",
+             f"[진단] 답변0={stat['cnt0']} 답변있음={stat['cntpos']} 미확정(-1)={stat['undet']} 주제불일치제외={stat['topic0']}",
+             "[샘플(답변수 / 제목)]"]
+    for cnt, ti, uu in samples:
+        lines.append(f"  - cnt={cnt} | {ti} | {uu}")
+    lines.append("")
     for t, u in unanswered:
         lines.append(f"- {t}\n  {u}")
     os.makedirs("research", exist_ok=True)
