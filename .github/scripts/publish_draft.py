@@ -144,7 +144,7 @@ def process(path):
     body = render_geo(body, meta)
 
     # 2) 글 등록 (예약 큐 맨 뒤)
-    mode = meta.get("schedule", "auto")
+    mode = meta.get("schedule", "now")  # 사용자 지시(2026-08-22): 예약 금지, 기본 즉시 발행
     post = {
         "title": title, "content": body, "categories": [int(meta.get("category", 6))],
         "tags": make_tag_ids(meta.get("tags", [])),

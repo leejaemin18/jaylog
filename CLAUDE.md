@@ -34,7 +34,7 @@
 ## 🚦 발행 정책
 - **⛔ 불법·불법조장 콘텐츠 절대 금지 (2026-08-20 지시)**: 불법 행위에 도움이 되거나 이를 조장·안내·미화하는 글은 **주제 후보에도 올리지 않는다.** 대표 예: **의약품·처방약 해외직구**(국내 대부분 불법 — post 59 '혈압약·처방약' 삭제함), 저작권 침해·짝퉁·정품인증/DRM 우회, 관세 회피(언더밸류)·밀수의 '실행 방법' 안내, 해킹·불법 우회 등. **규제·처벌을 경고·교육 목적으로 다루는 것('이렇게 하면 처벌된다')은 허용**하되, 방법을 알려주는 방향은 금지. 애드센스 정책(Illegal/Dangerous)·법적 리스크 모두 해당. 건기식·영양제(아이허브 등)는 합법 범위이므로 허용.
 - **⛔ 주제 사전 허가제 (2026-08-03 지시, 08-04 재강조)**: 순서는 반드시 **① 후보 주제 5개 제시 → ② 사용자 허가 → ③ 글 작성 → ④ 예약**. 허가 없이는 글 작성·drafts 커밋·예약(schedule-queue 포함) 그 무엇도 먼저 하지 않는다. 예약만 먼저 걸어두는 것도 금지. (이미 허가받아 예약된 글은 그대로 진행)
-- **하루 1개만 발행.** 여러 개는 초안으로 쌓고 예약발행(future)으로 분산, 발행 시간은 매일 다르게.
+- **⛔ 예약 금지 — 즉시 발행 (2026-08-22 지시)**: 글은 예약(future)하지 않는다. **"글 써" 요청 → 초안+이미지 받는 즉시 바로 발행(now).** drafts 기본값도 `now`. schedule: auto/future 쓰지 말 것.
 - 예약발행 누락은 GitHub Actions(`wp-cron-ping.yml`)가 매시간 깨워서 보완함.
 - 폰/원격 발행·예약: GitHub Actions `blog-command.yml` (Run workflow → status / publish-one / schedule-queue).
 - 글감 조사: GitHub Actions `kin-research.yml` (Run workflow → 키워드 입력) — 네이버 지식iN 질문 목록을 `research/`에 수집. 인증은 시크릿 NAVER_CLIENT_ID/SECRET.
@@ -57,7 +57,7 @@ title: 글 제목 (한국어)
 slug: english-slug-for-url
 tags: [키워드1, 키워드2, 키워드3, 키워드4, 키워드5]
 category: 6
-schedule: auto   # auto=예약 큐 맨 뒤(하루 1개) / now=즉시 발행 / draft=WP 초안으로만
+schedule: now    # ★기본 now=즉시 발행 (예약 금지 규칙, 2026-08-22). auto/future 쓰지 말 것 / draft=WP 초안으로만
 calculator: none # 관부가세 계산기 — 세금 계산과 관련된 글에만: 일반/의류/가방/건기식/화장품/전자0/전자8, 무관한 글은 none
 excerpt: 검색결과에 보일 1~2문장 요약
 answer_summary: |
