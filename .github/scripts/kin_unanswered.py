@@ -160,7 +160,8 @@ def main():
             lines.append(f"- {t}\n  {u}")
         lines.append("")
     if unaccepted:
-        lines.append("## 채택 답변 없음(답변은 있으나 베스트 미선정) — 채택 노려볼 대상")
+        unaccepted.sort(key=lambda x: x[2])  # 답변 수 적은 것부터(경쟁 적고 채택 확률 높음)
+        lines.append("## 채택 답변 없음(답변은 있으나 베스트 미선정) — 답변 적은 순, 채택 노려볼 대상")
         for t, u, c in unaccepted:
             lines.append(f"- {t} (답변 {c}개)\n  {u}")
     os.makedirs("research", exist_ok=True)
