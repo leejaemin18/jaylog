@@ -91,6 +91,20 @@ tools: Read, Write, Edit, Bash, WebSearch, WebFetch, mcp__Claude_Browser__previe
 - 과하게 알록달록/형광펜 남발은 금지. 강조는 **골드 라인 박스 + 굵은 글씨** 정도로 절제 있게, 톤은 신뢰감 유지.
 - 상단 '한눈 요약' 박스와 하단 FAQ는 파이프라인이 자동 렌더(크게·또렷하게) — 본문 콜아웃과 역할이 겹치지 않게, 콜아웃은 요약과 다른 '실전 핵심'으로.
 
+## 🎨 글 디자인 스타일 (2026-08-23 승인 — 유니패스 글 398 파일럿, 위 '절제' 문구보다 우선)
+사용자 피드백: 남색+골드 프리미엄 톤은 "딱딱"함. **인기 블로그처럼 부드럽고 둥글둥글·여백 넉넉·친근하게.** 아래 스타일을 글마다 적용한다(수치·의미 불변). 이미지 톤/팔레트는 강제하지 말 것(자유롭게).
+- **본문 전체 폰트 래퍼**(맨 앞): `<div style="font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:16.5px;color:#2c2c2c;">` … 맨 끝 `</div>`
+- **소제목 h2**(이모지 금지, 형광펜 밑줄):
+  ```html
+  <h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">소제목</span></h2>
+  ```
+- **파스텔 둥근 박스**(radius 16px): 💡팁=민트 `background:#eef7f0;border:1px solid #d3e9d9;`, ⚠️주의=피치 `background:#fdf3ec;border:1px solid #f3d8c4;`, 🔑핵심=크림 `background:#fbf6ea;border:1px solid #ecdcb5;`. (박스 라벨엔 이모지 OK, 소제목엔 금지)
+- **핵심 문구 색강조**: 결정적 단어만 `<strong style="color:#d2691e;">…</strong>` (주황). 남용 금지, 섹션당 1~2개.
+- **표**: 둥근 테두리+줄무늬 — `<div style="overflow-x:auto;">` 로 감싸고, thead `background:#f3ead2;color:#6b5320;`, 짝수행 `background:#faf7f0;`, radius 14px.
+- **단계 배지**: `<span style="display:inline-block;min-width:24px;height:24px;line-height:24px;text-align:center;background:#ffe6a8;color:#8a6a1e;border-radius:50%;font-weight:800;font-size:13px;margin-right:9px;">1</span>`
+- **이미지**: `style="border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);"` 로 둥글게. **본문 이미지 여러 장 OK**(썸네일1+본문 3장 목표). 추가 이미지는 이메일→드라이브로 `-body2/-body3` 받아 apply-revisions의 `src="LOCAL:<슬러그>-body2"` 자리표시자로 삽입.
+- **문단 줄간격** 1.85 안팎(`<p style="line-height:1.85;">`)로 넉넉하게, 문단 짧게.
+
 ## 체류시간 원칙 (구글 최신 알고리즘 대응)
 - 독자가 오래 머물게 만드는 요소를 의도적으로 배치: 표, 리스트, 실제 계산 예시, "많이들 착각하는 것" 코너
 - 첫 화면(도입부)에서 이 글이 답을 준다는 확신을 줘야 이탈하지 않는다
