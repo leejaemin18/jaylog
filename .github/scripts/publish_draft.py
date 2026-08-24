@@ -102,26 +102,36 @@ def process(path):
     if media:
         print(f"  썸네일 업로드: media {media['id']}")
 
-    # 1-b) 본문 이미지 (body_image_brief가 있고 생성 성공하면 삽입)
-    if meta.get("body_image_brief"):
-        media2 = upload_image(meta["body_image_brief"], "body")
-        if media2:
-            print(f"  본문 이미지 업로드: media {media2['id']}")
-            alt = meta.get("body_image_alt", title)
+    # 1-b) 본문 이미지 — 여러 장 지원(2026-08-23 승인 스타일: 썸네일1+본문 최대 3장).
+    #   drafts/img/<슬러그>-body(.2/.3) 로컬 파일이 있으면 각각 올려 마커 위치에 삽입.
+    #   마커: 첫 장 <!--본문이미지-->, 둘째 <!--본문이미지2-->, 셋째 <!--본문이미지3-->.
+    #   승인 스타일대로 둥근 모서리+옅은 그림자 적용.
+    IMG_STYLE = "border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);"
+    alt = meta.get("body_image_alt", title)
+    body_slots = [("body", "<!--본문이미지-->"), ("body2", "<!--본문이미지2-->"), ("body3", "<!--본문이미지3-->")]
+    first_ok = None
+    for i, (suffix, marker) in enumerate(body_slots):
+        # 첫 장은 body_image_brief가 있을 때만(하위호환), 2·3장은 로컬 파일 있으면
+        if suffix == "body" and not meta.get("body_image_brief"):
+            continue
+        media_b = upload_image(meta.get(f"{suffix}_image_brief", meta.get("body_image_brief", "")), suffix)
+        if media_b:
+            print(f"  본문 이미지({suffix}) 업로드: media {media_b['id']}")
             fig = (f'<figure class="wp-block-image size-large">'
-                   f'<img src="{media2["source_url"]}" alt="{alt}"/></figure>')
-            if "<!--본문이미지-->" in body:
-                body = body.replace("<!--본문이미지-->", fig, 1)
-            else:  # 마커가 없으면 두 번째 h2 앞(첫 섹션 끝)에 삽입
+                   f'<img src="{media_b["source_url"]}" alt="{alt}" style="{IMG_STYLE}"/></figure>')
+            if marker in body:
+                body = body.replace(marker, fig, 1)
+            elif i == 0:  # 첫 장 마커 없으면 두 번째 h2 앞에 삽입
                 parts = re.split(r"(?=<h2)", body)
-                if len(parts) >= 3:
-                    body = parts[0] + parts[1] + fig + "".join(parts[2:])
-                else:
-                    body += fig
-        else:
+                body = (parts[0] + parts[1] + fig + "".join(parts[2:])) if len(parts) >= 3 else body + fig
+            else:
+                body += fig
+            first_ok = first_ok or True
+        elif suffix == "body":
             need_body = True
-    # 본문이미지 마커가 남아 있으면 제거(빈 마커 노출 방지)
-    body = body.replace("<!--본문이미지-->", "")
+    # 남은 빈 마커 제거
+    for _, marker in body_slots:
+        body = body.replace(marker, "")
 
     # 1-c) 관부가세 계산기 — 세금 계산과 관련된 글이면 계산기 전용 페이지로 가는 버튼 링크를 넣는다.
     # (예전엔 계산기 위젯 HTML을 글마다 인라인 복붙했으나, 애드센스가 '복붙 중복'으로 감점 →
