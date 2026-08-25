@@ -71,3 +71,6 @@ thumbnail_brief: |
 
 <p style="font-size:14px;color:#888;line-height:1.75;"><em>수수료·환율은 카드사·결제업체마다 다르며 2026년 기준 일반 정보입니다. 정확한 수수료율은 본인 카드사 안내를 확인하세요.</em></p>
 </div>
+
+
+<!-- 등록됨: post 415 / publish / 2026-08-25T12:32:15 / media 411 -->
