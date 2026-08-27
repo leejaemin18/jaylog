@@ -87,3 +87,6 @@ body3_image_alt: 통관검사 대처를 위해 배송 상태를 조회하고 서
 
 <p style="font-size:14px;color:#888;line-height:1.75;"><em>본 글은 2026년 8월 기준 일반 정보이며, 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사 확인이 필요합니다.</em></p>
 </div>
+
+
+<!-- 등록됨: post 428 / publish / 2026-08-27T21:52:24 / media 424 -->
