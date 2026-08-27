@@ -18,13 +18,49 @@
 공식 2단계(컨테이너 생성 → 처리 대기 → 발행)를 따른다.
 """
 import argparse
+import base64
+import glob
+import io
+import json
 import os
 import sys
 import time
+import urllib.request
+
 import requests
 
 HOST = os.environ.get("IG_GRAPH_HOST", "graph.instagram.com")
 VERSION = os.environ.get("IG_GRAPH_VERSION", "v23.0")
+
+# 워드프레스 미디어 업로드(공개 URL 확보용) — 인스타 Graph API는 공개 URL만 게시 가능.
+WP_API = "https://jaylog.co.kr/wp-json/wp/v2"
+WP_USER = "claude"
+
+
+def wp_upload_local(name):
+    """drafts/img/<name>.(jpg|png|…) 를 WP 미디어로 올리고 공개 source_url을 돌려준다."""
+    pw = os.environ.get("WP_APP_PASSWORD")
+    if not pw:
+        sys.exit("❌ 로컬 이미지 게시에는 WP_APP_PASSWORD(시크릿)가 필요합니다.")
+    matches = []
+    for ext in ("jpg", "jpeg", "png", "webp"):
+        matches += glob.glob(f"drafts/img/{name}.{ext}")
+    if not matches:
+        sys.exit(f"❌ 로컬 이미지 파일 없음: drafts/img/{name}.*")
+    path = matches[0]
+    auth = base64.b64encode(f"{WP_USER}:{pw}".encode()).decode()
+    with open(path, "rb") as f:
+        raw = f.read()
+    ctype = "image/png" if path.endswith(".png") else "image/jpeg"
+    fname = os.path.basename(path)
+    req = urllib.request.Request(
+        WP_API + "/media", method="POST", data=raw,
+        headers={"Authorization": "Basic " + auth, "Content-Type": ctype,
+                 "Content-Disposition": f'attachment; filename="{fname}"'})
+    with urllib.request.urlopen(req, timeout=120) as res:
+        media = json.load(res)
+    print(f"  WP 미디어 업로드: {fname} → media {media['id']} / {media['source_url']}")
+    return media["source_url"]
 
 
 def _base():
@@ -79,6 +115,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--image-url", default="")
     ap.add_argument("--video-url", default="")
+    ap.add_argument("--local-image", default="",
+                    help="drafts/img/<name>.* 를 WP 미디어에 올려 공개 URL로 게시(IMAGE)")
     ap.add_argument("--caption", default="")
     ap.add_argument("--media-type", default="IMAGE", choices=["IMAGE", "REELS"])
     a = ap.parse_args()
@@ -87,8 +125,12 @@ def main():
         if not os.environ.get(k):
             sys.exit(f"❌ 환경변수 {k} 가 없습니다(시크릿 설정 필요).")
 
+    # 로컬 카드가 지정되면 WP 미디어에 올려 공개 URL을 확보
+    if a.local_image and not a.image_url:
+        a.image_url = wp_upload_local(a.local_image)
+
     if a.media_type == "IMAGE" and not a.image_url:
-        sys.exit("❌ IMAGE 게시에는 --image-url 이 필요합니다(공개 URL).")
+        sys.exit("❌ IMAGE 게시에는 --image-url 또는 --local-image 가 필요합니다(공개 URL).")
     if a.media_type == "REELS" and not a.video_url:
         sys.exit("❌ REELS 게시에는 --video-url 이 필요합니다(공개 URL).")
 

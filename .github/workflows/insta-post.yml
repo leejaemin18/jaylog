@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       image_url:
-        description: "게시할 이미지 공개 URL (IMAGE일 때 필수, 예: 워드프레스 미디어 URL)"
+        description: "게시할 이미지 공개 URL (직접 URL이 있을 때)"
+        required: false
+        default: ""
+      local_image:
+        description: "drafts/img/<이름> (확장자 없이). WP 미디어에 올려 공개 URL로 게시"
         required: false
         default: ""
       video_url:
@@ -36,9 +40,11 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_GRAPH_HOST: ${{ vars.IG_GRAPH_HOST }}
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: |
           python .github/scripts/insta_upload.py \
             --media-type "${{ inputs.media_type }}" \
             --image-url "${{ inputs.image_url }}" \
+            --local-image "${{ inputs.local_image }}" \
             --video-url "${{ inputs.video_url }}" \
             --caption "${{ inputs.caption }}"
