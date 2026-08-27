@@ -29,8 +29,9 @@ import urllib.request
 
 import requests
 
-HOST = os.environ.get("IG_GRAPH_HOST", "graph.instagram.com")
-VERSION = os.environ.get("IG_GRAPH_VERSION", "v23.0")
+# 빈 문자열(설정 안 된 저장소 변수)도 기본값으로 처리
+HOST = os.environ.get("IG_GRAPH_HOST") or "graph.instagram.com"
+VERSION = os.environ.get("IG_GRAPH_VERSION") or "v23.0"
 
 # 워드프레스 미디어 업로드(공개 URL 확보용) — 인스타 Graph API는 공개 URL만 게시 가능.
 WP_API = "https://jaylog.co.kr/wp-json/wp/v2"
