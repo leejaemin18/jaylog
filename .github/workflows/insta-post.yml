@@ -27,6 +27,11 @@ on:
         options:
           - IMAGE
           - REELS
+      verify_only:
+        description: "게시하지 않고 계정·최근 게시물만 확인"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   post:
@@ -43,6 +48,7 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
         run: |
           python .github/scripts/insta_upload.py \
+            ${{ inputs.verify_only == true && '--verify' || '' }} \
             --media-type "${{ inputs.media_type }}" \
             --image-url "${{ inputs.image_url }}" \
             --local-image "${{ inputs.local_image }}" \

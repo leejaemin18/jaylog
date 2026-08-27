@@ -112,8 +112,27 @@ def publish(creation_id):
     return j["id"]
 
 
+def verify():
+    """토큰이 연결된 계정(username)과 최근 게시물 permalink를 출력 — '어느 계정에 올라갔나' 확인용."""
+    acc = os.environ["IG_USER_ID"]
+    tok = _token()
+    me = requests.get(f"https://{HOST}/{VERSION}/{acc}",
+                      params={"fields": "id,username,account_type,media_count", "access_token": tok},
+                      timeout=30).json()
+    print(f"🔎 연결된 계정: {me}")
+    recent = requests.get(f"https://{HOST}/{VERSION}/{acc}/media",
+                          params={"fields": "id,permalink,timestamp,caption", "limit": 5, "access_token": tok},
+                          timeout=30).json()
+    for m in recent.get("data", []):
+        cap = (m.get("caption") or "").split("\n")[0][:30]
+        print(f"  · {m.get('timestamp')} | {m.get('permalink')} | {cap}")
+    if not recent.get("data"):
+        print("  (최근 게시물 없음)", recent)
+
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--verify", action="store_true", help="계정·최근 게시물 확인만 하고 종료")
     ap.add_argument("--image-url", default="")
     ap.add_argument("--video-url", default="")
     ap.add_argument("--local-image", default="",
@@ -125,6 +144,10 @@ def main():
     for k in ("IG_USER_ID", "IG_ACCESS_TOKEN"):
         if not os.environ.get(k):
             sys.exit(f"❌ 환경변수 {k} 가 없습니다(시크릿 설정 필요).")
+
+    if a.verify:
+        verify()
+        return
 
     # 로컬 카드가 지정되면 WP 미디어에 올려 공개 URL을 확보
     if a.local_image and not a.image_url:
