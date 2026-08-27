@@ -1,0 +1,44 @@
+name: 인스타 게시 — 제이로그
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_url:
+        description: "게시할 이미지 공개 URL (IMAGE일 때 필수, 예: 워드프레스 미디어 URL)"
+        required: false
+        default: ""
+      video_url:
+        description: "게시할 영상 공개 URL (REELS일 때 필수)"
+        required: false
+        default: ""
+      caption:
+        description: "캡션(본문 + 해시태그). 링크는 프로필로 안내(피드 캡션 링크는 클릭 안 됨)"
+        required: false
+        default: ""
+      media_type:
+        description: "미디어 종류"
+        required: true
+        default: "IMAGE"
+        type: choice
+        options:
+          - IMAGE
+          - REELS
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 파이썬 준비
+        run: pip install --quiet requests
+      - name: 인스타 게시
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_GRAPH_HOST: ${{ vars.IG_GRAPH_HOST }}
+        run: |
+          python .github/scripts/insta_upload.py \
+            --media-type "${{ inputs.media_type }}" \
+            --image-url "${{ inputs.image_url }}" \
+            --video-url "${{ inputs.video_url }}" \
+            --caption "${{ inputs.caption }}"
