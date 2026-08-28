@@ -84,3 +84,6 @@ body3_image_alt: 직구로 받은 영양제 병과 주문내역을 확인하는 
 
 <p style="font-size:14px;color:#888;line-height:1.75;"><em>본 글은 2026년 8월 기준 일반 정보이며, 성분·수량 규정은 바뀔 수 있습니다. 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 식약처 확인이 필요합니다.</em></p>
 </div>
+
+
+<!-- 등록됨: post 443 / publish / 2026-08-28T15:05:34 / media 439 -->
