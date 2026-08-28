@@ -1,0 +1,63 @@
+name: 인스타 릴스 — 제이로그 (이미지→영상+음악)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: "drafts/img/<이름> (확장자 없이) — 릴스 배경으로 쓸 카드 이미지"
+        required: true
+        default: ""
+      caption:
+        description: "캡션(본문 + 해시태그). 링크는 프로필로 안내"
+        required: false
+        default: ""
+      duration:
+        description: "릴스 길이(초)"
+        required: false
+        default: "8"
+
+jobs:
+  reel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 도구 준비
+        run: |
+          pip install --quiet requests
+          ffmpeg -version >/dev/null 2>&1 || sudo apt-get update -y && sudo apt-get install -y ffmpeg
+      - name: 릴스 렌더링 (9:16 + 로열티프리 음원)
+        env:
+          IMG: ${{ inputs.image }}
+          DUR: ${{ inputs.duration }}
+        run: |
+          set -e
+          SRC=$(ls drafts/img/${IMG}.jpg drafts/img/${IMG}.jpeg drafts/img/${IMG}.png 2>/dev/null | head -1)
+          if [ -z "$SRC" ]; then echo "❌ 이미지 없음: drafts/img/${IMG}.*"; exit 1; fi
+          echo "배경 이미지: $SRC / 길이 ${DUR}s"
+          OUTFADE=$(python3 -c "print(max(0,int('${DUR}')-1))")
+          # 1) 로열티프리 음원(합성 앰비언트 패드, C major) — 저작권 100% 프리
+          ffmpeg -y \
+            -f lavfi -i "sine=frequency=261.63:duration=${DUR}" \
+            -f lavfi -i "sine=frequency=329.63:duration=${DUR}" \
+            -f lavfi -i "sine=frequency=392.00:duration=${DUR}" \
+            -f lavfi -i "sine=frequency=523.25:duration=${DUR}" \
+            -filter_complex "[0][1][2][3]amix=inputs=4:normalize=1,tremolo=f=6:d=0.25,volume=1.1,afade=t=in:st=0:d=1.2,afade=t=out:st=${OUTFADE}:d=1[a]" \
+            -map "[a]" -c:a pcm_s16le audio.wav
+          # 2) 9:16 릴스: 흐린 배경 + 카드 중앙 배치
+          ffmpeg -y -loop 1 -i "$SRC" -i audio.wav \
+            -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=20:1,eq=brightness=-0.2[bg];[0:v]scale=1000:1000[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]" \
+            -map "[v]" -map 1:a -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -r 25 -t "${DUR}" \
+            -c:a aac -b:a 128k -movflags +faststart -shortest reel.mp4
+          ls -la reel.mp4
+      - name: 릴스 게시
+        env:
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_GRAPH_HOST: ${{ vars.IG_GRAPH_HOST }}
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          CAPTION: ${{ inputs.caption }}
+        run: |
+          python .github/scripts/insta_upload.py \
+            --media-type REELS \
+            --local-video reel.mp4 \
+            --caption "$CAPTION"

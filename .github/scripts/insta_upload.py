@@ -64,6 +64,27 @@ def wp_upload_local(name):
     return media["source_url"]
 
 
+def wp_upload_video(path):
+    """로컬 mp4를 WP 미디어로 올리고 공개 source_url을 돌려준다(릴스용)."""
+    pw = os.environ.get("WP_APP_PASSWORD")
+    if not pw:
+        sys.exit("❌ 로컬 영상 게시에는 WP_APP_PASSWORD(시크릿)가 필요합니다.")
+    if not os.path.exists(path):
+        sys.exit(f"❌ 로컬 영상 파일 없음: {path}")
+    auth = base64.b64encode(f"{WP_USER}:{pw}".encode()).decode()
+    with open(path, "rb") as f:
+        raw = f.read()
+    fname = os.path.basename(path)
+    req = urllib.request.Request(
+        WP_API + "/media", method="POST", data=raw,
+        headers={"Authorization": "Basic " + auth, "Content-Type": "video/mp4",
+                 "Content-Disposition": f'attachment; filename="{fname}"'})
+    with urllib.request.urlopen(req, timeout=300) as res:
+        media = json.load(res)
+    print(f"  WP 미디어 업로드(영상): {fname} → media {media['id']} / {media['source_url']}")
+    return media["source_url"]
+
+
 def _base():
     acc = os.environ["IG_USER_ID"]
     return f"https://{HOST}/{VERSION}/{acc}"
@@ -137,6 +158,8 @@ def main():
     ap.add_argument("--video-url", default="")
     ap.add_argument("--local-image", default="",
                     help="drafts/img/<name>.* 를 WP 미디어에 올려 공개 URL로 게시(IMAGE)")
+    ap.add_argument("--local-video", default="",
+                    help="로컬 mp4 경로를 WP 미디어에 올려 공개 URL로 게시(REELS)")
     ap.add_argument("--caption", default="")
     ap.add_argument("--media-type", default="IMAGE", choices=["IMAGE", "REELS"])
     a = ap.parse_args()
@@ -149,19 +172,22 @@ def main():
         verify()
         return
 
-    # 로컬 카드가 지정되면 WP 미디어에 올려 공개 URL을 확보
+    # 로컬 카드/영상이 지정되면 WP 미디어에 올려 공개 URL을 확보
     if a.local_image and not a.image_url:
         a.image_url = wp_upload_local(a.local_image)
+    if a.local_video and not a.video_url:
+        a.video_url = wp_upload_video(a.local_video)
 
     if a.media_type == "IMAGE" and not a.image_url:
         sys.exit("❌ IMAGE 게시에는 --image-url 또는 --local-image 가 필요합니다(공개 URL).")
     if a.media_type == "REELS" and not a.video_url:
-        sys.exit("❌ REELS 게시에는 --video-url 이 필요합니다(공개 URL).")
+        sys.exit("❌ REELS 게시에는 --video-url 또는 --local-video 가 필요합니다(공개 URL).")
 
     print(f"▶ 컨테이너 생성 ({a.media_type})…")
     cid = create_container(a.caption, a.image_url or None, a.video_url or None, a.media_type)
     print(f"  creation_id = {cid}")
-    wait_ready(cid)
+    # 릴스는 처리 시간이 더 걸림 → 폴링 횟수 넉넉히
+    wait_ready(cid, tries=60 if a.media_type == "REELS" else 20)
     mid = publish(cid)
     print(f"✅ 게시 완료 — media id: {mid}")
 
