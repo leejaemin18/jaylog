@@ -74,7 +74,7 @@ body3_image_alt: 직구로 받은 영양제 병과 주문내역을 확인하는 
 
 <h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">많이 묻는 것</span></h2>
 <p style="line-height:1.85;"><strong>가족 것까지 한 번에 사도 되나요?</strong> — 통관은 물품을 받는 사람(개인통관고유부호 명의자) 기준이에요. 한 사람 앞으로 여러 명 몫을 몰아 받으면 자가사용 범위를 넘겨 요건 확인 대상이 될 수 있어요. 각자 본인 명의로 받는 게 안전합니다.</p>
-<p style="line-height:1.85;"><strong>통관 보류 문자가 왔어요.</strong> — 먼저 사유부터 확인하세요. 수량 초과나 서류 문제면 보완 후 통관되는 경우가 많고, 성분이 문제면 반송·폐기될 수 있어요. 성분표를 미리 확인해 두면 이런 일을 대부분 예방할 수 있습니다.</p>
+<p style="line-height:1.85;"><strong>영양제 직구 후 통관 보류 문자가 왔어요.</strong> — 먼저 사유부터 확인하세요. 수량 초과나 서류 문제면 보완 후 통관되는 경우가 많고, 성분이 문제면 반송·폐기될 수 있어요. 성분표를 미리 확인해 두면 이런 일을 대부분 예방할 수 있습니다.</p>
 
 <div style="background:#fbf6ea;border:1px solid #ecdcb5;border-radius:16px;padding:18px 20px;margin:1.7em 0;font-size:16.5px;line-height:1.8;">
 <strong>🔑 핵심만</strong> — 영양제 직구는 <strong style="color:#d2691e;">성분표 확인 + 총 6병 이내 + 150달러</strong>만 챙기면 돼요. 일반 비타민·오메가3는 대부분 안전하게 받을 수 있습니다.
