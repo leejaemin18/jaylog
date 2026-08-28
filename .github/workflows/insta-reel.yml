@@ -15,6 +15,14 @@ on:
         description: "릴스 길이(초)"
         required: false
         default: "8"
+      music_file:
+        description: "배경음악 파일명(effacestudios CC0 팩). 예: Party Time.mp3 / The Champion.mp3 / Sports Spirit.mp3 / Newness.mp3"
+        required: false
+        default: "Party Time.mp3"
+      music_start:
+        description: "곡에서 사용할 시작 지점(초)"
+        required: false
+        default: "8"
 
 jobs:
   reel:
@@ -25,29 +33,37 @@ jobs:
         run: |
           pip install --quiet requests
           ffmpeg -version >/dev/null 2>&1 || sudo apt-get update -y && sudo apt-get install -y ffmpeg
-      - name: 릴스 렌더링 (9:16 + 로열티프리 음원)
+      - name: 릴스 렌더링 (9:16 + 실제 로열티프리 음악)
         env:
           IMG: ${{ inputs.image }}
           DUR: ${{ inputs.duration }}
+          MUSIC: ${{ inputs.music_file }}
+          MSTART: ${{ inputs.music_start }}
         run: |
           set -e
           SRC=$(ls drafts/img/${IMG}.jpg drafts/img/${IMG}.jpeg drafts/img/${IMG}.png 2>/dev/null | head -1)
           if [ -z "$SRC" ]; then echo "❌ 이미지 없음: drafts/img/${IMG}.*"; exit 1; fi
-          echo "배경 이미지: $SRC / 길이 ${DUR}s"
-          OUTFADE=$(python3 -c "print(max(0,int('${DUR}')-1))")
-          # 1) 로열티프리 음원(합성 앰비언트 패드, C major) — 저작권 100% 프리
-          ffmpeg -y \
-            -f lavfi -i "sine=frequency=261.63:duration=${DUR}" \
-            -f lavfi -i "sine=frequency=329.63:duration=${DUR}" \
-            -f lavfi -i "sine=frequency=392.00:duration=${DUR}" \
-            -f lavfi -i "sine=frequency=523.25:duration=${DUR}" \
-            -filter_complex "[0][1][2][3]amix=inputs=4:normalize=1,tremolo=f=6:d=0.25,volume=1.1,afade=t=in:st=0:d=1.2,afade=t=out:st=${OUTFADE}:d=1[a]" \
-            -map "[a]" -c:a pcm_s16le audio.wav
-          # 2) 9:16 릴스: 흐린 배경 + 카드 중앙 배치
-          ffmpeg -y -loop 1 -i "$SRC" -i audio.wav \
+          OUTFADE=$(python3 -c "print(max(0,float('${DUR}')-1))")
+          # 1) 실제 CC0(퍼블릭 도메인) 음악을 내려받는다 — effacestudios/Royalty-Free-Music-Pack
+          ENC=$(python3 -c "import urllib.parse,os;print(urllib.parse.quote(os.environ['MUSIC']))")
+          URL="https://raw.githubusercontent.com/effacestudios/Royalty-Free-Music-Pack/master/${ENC}"
+          echo "음악 다운로드: $URL"
+          if curl -fsSL "$URL" -o music.mp3 && [ "$(stat -c%s music.mp3 2>/dev/null || echo 0)" -gt 100000 ]; then
+            AUDIO=music.mp3; SS="-ss ${MSTART}"
+            echo "✅ 실제 음악 사용: ${MUSIC} (시작 ${MSTART}s)"
+          else
+            echo "⚠️ 음악 다운로드 실패 → 합성 폴백"
+            pip install --quiet numpy
+            python3 .github/scripts/make_music.py audio.wav "${DUR}"
+            AUDIO=audio.wav; SS=""
+          fi
+          # 2) 9:16 릴스: 흐린 배경 + 카드 중앙 배치, 음악 페이드 인/아웃
+          ffmpeg -y -loop 1 -i "$SRC" $SS -i "$AUDIO" \
             -filter_complex "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=20:1,eq=brightness=-0.2[bg];[0:v]scale=1000:1000[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2,format=yuv420p[v]" \
-            -map "[v]" -map 1:a -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -r 25 -t "${DUR}" \
-            -c:a aac -b:a 128k -movflags +faststart -shortest reel.mp4
+            -map "[v]" -map 1:a \
+            -af "afade=t=in:st=0:d=0.8,afade=t=out:st=${OUTFADE}:d=1,volume=1.0" \
+            -c:v libx264 -preset medium -crf 20 -pix_fmt yuv420p -r 25 -t "${DUR}" \
+            -c:a aac -b:a 160k -movflags +faststart -shortest reel.mp4
           ls -la reel.mp4
       - name: 릴스 게시
         env:
