@@ -70,6 +70,7 @@ body3_image_alt: 유럽발 택배 배송과 배송대행을 비교하는 장면
 <h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">많이 묻는 것</span></h2>
 <p style="line-height:1.85;"><strong>영국은 브렉시트 이후 달라졌나요?</strong> — 영국은 EU에서 나갔지만, 한국으로 보낼 때 VAT(20%)를 빼는 원리와 한국 통관 기준(150달러·개인통관고유부호)은 그대로예요.</p>
 <p style="line-height:1.85;"><strong>150달러 넘으면 세금은 얼마나요?</strong> — 물품가에 운임을 더한 과세가격에 품목별 관세와 부가세 10%가 붙어요. 금액은 계산기로 미리 확인하는 게 정확합니다.</p>
+<p style="line-height:1.85;"><strong>배송은 얼마나 걸리나요?</strong> — 직배송은 보통 1~2주, 배대지를 거치면 현지 창고 대기까지 더해져 조금 더 걸려요. 시즌 세일 기간에는 물량이 몰려 더 지연되니 여유를 두고 주문하세요.</p>
 
 <div style="background:#fbf6ea;border:1px solid #ecdcb5;border-radius:16px;padding:18px 20px;margin:1.7em 0;font-size:16.5px;line-height:1.8;">
 <strong>🔑 핵심만</strong> — 유럽 직구는 <strong style="color:#d2691e;">VAT(부가세)를 빼는 것</strong>이 관건이에요. 배송지를 한국으로 넣어 부가세가 빠지는지 확인하고, 물품가 150달러·개인통관고유부호만 챙기면 됩니다.</div>
