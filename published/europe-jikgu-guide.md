@@ -79,3 +79,6 @@ body3_image_alt: 유럽발 택배 배송과 배송대행을 비교하는 장면
 
 <p style="font-size:14px;color:#888;line-height:1.75;"><em>본 글은 2026년 8월 기준 일반 정보이며, 세율·환급 방식은 나라·사이트마다 다를 수 있습니다. 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사 확인이 필요합니다.</em></p>
 </div>
+
+
+<!-- 등록됨: post 449 / publish / 2026-08-29T18:14:01 / media 445 -->
