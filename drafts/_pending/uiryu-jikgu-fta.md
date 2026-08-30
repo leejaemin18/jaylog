@@ -1,0 +1,82 @@
+---
+title: 의류 직구 관세 — 신발까지 13%, 미국산 FTA는 0원?
+slug: uiryu-jikgu-fta
+tags: [의류 직구, 신발 직구, 해외직구 관세, FTA 원산지, 관부가세, 개인통관고유부호]
+category: 6
+schedule: now
+calculator: 의류
+excerpt: 의류 직구 관세, 옷·신발은 관세율 13%로 높은 편입니다. 면세 150달러(미국 200달러) 기준, 미국산 FTA로 0원이 되는 조건과 흔한 오해까지 정리했습니다.
+answer_summary: |
+  의류 직구는 옷·신발 모두 관세율이 13%로 높은 편이라, 면세 한도를 넘으면 세금이 꽤 붙습니다. 면세 기준은 물품가격 미화 150달러(미국발 특송 200달러)입니다. 미국산이면 한·미 FTA로 관세가 0원이 될 수 있지만, '미국 사이트에서 샀다'가 아니라 '제품 원산지가 미국'이어야 하고 원산지증명 요건도 갖춰야 해서, 브랜드 의류 대부분은 적용받기 어렵습니다.
+faq:
+  - q: 의류 직구 관세율은 얼마인가요?
+    a: 옷과 신발은 대체로 관세율 13%로 높은 편입니다. 여기에 부가세 10%가 더해집니다. 다만 물품가격이 면세 기준(미화 150달러, 미국발 200달러) 이하면 세금이 없습니다.
+  - q: 미국 사이트에서 사면 FTA로 관세가 0원인가요?
+    a: 자동으로 0원이 되는 건 아닙니다. 한·미 FTA 무관세는 '제품의 원산지가 미국'이어야 하고 원산지증명 요건도 갖춰야 합니다. 미국 사이트에서 팔아도 원산지가 베트남·중국 등이면 FTA 대상이 아닙니다.
+  - q: 사이즈가 안 맞아 반품하면 낸 관세는 돌려받나요?
+    a: 네. 통관 후 일정 기간 내에 반품(재수출)하면 낸 관세·부가세를 환급받을 수 있습니다. 반품 사실을 증빙할 자료를 남겨두고 정해진 절차를 따르면 됩니다.
+thumbnail_brief: |
+  극사실주의(hyper-realistic) 실사 사진급 8K 광고 비주얼의 블로그 썸네일. 가로형. 시네마틱 조명, 얕은 심도, 미세 질감. 톤 자유(밝고 세련된 패션 느낌 권장).
+  무상표 의류·신발(옷·스니커즈)이 정갈하게 놓이고 크래프트 택배상자와 함께 연출된 세련된 장면.
+  금박 질감 큰 한글 텍스트 '의류 직구', 흰색 작은 텍스트 '관세와 FTA', 하단 작게 흰색 'jaylog.co.kr · 해외직구·통관 가이드'.
+  실제 브랜드 로고·상표명 금지(무상표).
+  한글 텍스트는 정확하게: 의류 직구 / 관세와 FTA / jaylog.co.kr · 해외직구·통관 가이드
+body_image_brief: |
+  극사실주의 실사 사진급 본문 이미지. 가로형. 무상표 옷·신발과 계산기·영수증을 올려 관세를 계산하는 밝고 세련된 데스크 연출.
+  텍스트는 넣지 말 것(숫자 정도만 허용). 브랜드 로고 금지.
+body2_image_brief: |
+  극사실주의 실사 사진급 본문 이미지. 가로형. 옷의 라벨(원산지 태그)을 손으로 확인하는 클로즈업, 세련되고 밝은 톤.
+  텍스트는 넣지 말 것. 브랜드 로고 금지.
+body3_image_brief: |
+  극사실주의 실사 사진급 본문 이미지. 가로형. 택배상자에서 꺼낸 무상표 옷·신발과 반품용으로 다시 담는 손을 보여주는 밝은 데스크 연출.
+  텍스트는 넣지 말 것. 브랜드 로고 금지.
+body_image_alt: 의류 직구 관세를 계산하는 옷·신발과 계산기
+body2_image_alt: 옷의 원산지 라벨을 확인하는 모습
+body3_image_alt: 사이즈가 안 맞아 반품용으로 옷을 다시 담는 모습
+---
+<div style="font-family:'Pretendard','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:16.5px;color:#2c2c2c;">
+<p style="line-height:1.85;">해외 브랜드 옷·신발이 국내보다 훨씬 싸서 <strong style="color:#d2691e;">의류 직구</strong>에 도전하는 분이 많아요. 그런데 막상 세금 단계에서 '생각보다 많이 나오네' 하는 경우가 잦습니다. 옷과 신발은 관세율이 높은 편이거든요. 사기 전에 알아둘 것만 짚어볼게요.</p>
+
+<h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">의류 직구, 관세는 얼마나</span></h2>
+<p style="line-height:1.85;">먼저 면세 기준이에요. 물품가격 <strong style="color:#d2691e;">미화 150달러</strong>(미국발 특송은 200달러)까지는 세금이 없어요. 이 금액을 넘으면 전체 금액에 관세와 부가세가 붙습니다.</p>
+<p style="line-height:1.85;">문제는 세율이에요. 옷과 신발은 대체로 <strong>관세율 13%</strong>로 전자제품(0~8%)보다 높아요. 여기에 부가세 10%까지 더해지니, 면세 기준을 조금만 넘겨도 세금 체감이 큽니다. 통관에는 <strong>개인통관고유부호</strong>가 필요하고요.</p>
+<p style="line-height:1.85;">예를 들어볼게요. 유럽 사이트에서 30만 원짜리 코트를 샀다면(150달러 초과), 관세 13%로 약 3만9천 원, 여기에 부가세 10%가 더해져 <strong>세금은 대략 4만5천 원 안팎</strong>이 나와요. 200달러가 넘는 옷 한 벌만 사도 배송비까지 하면 만만치 않죠. 그래서 옷은 면세 기준을 넘기는지부터 계산해 보는 게 좋아요.</p>
+
+<!--본문이미지-->
+
+<h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">미국산은 0원? — FTA의 진실</span></h2>
+<p style="line-height:1.85;">"미국 사이트에서 사면 한·미 FTA로 관세가 0원 아니야?"라고 많이 물어요. 절반만 맞아요. FTA 무관세는 <strong style="color:#d2691e;">'제품의 원산지가 미국'</strong>이어야 하고, 원산지를 증명하는 요건까지 갖춰야 적용됩니다.</p>
+<p style="line-height:1.85;">그런데 우리가 사는 브랜드 옷·신발은 <strong>제조국이 베트남·중국·인도네시아</strong>인 경우가 대부분이에요. 미국 사이트에서 팔아도 원산지가 미국이 아니면 FTA 대상이 아니라, 그냥 13% 관세가 붙습니다. 옷 안쪽 라벨의 'Made in ○○'가 진짜 원산지예요.</p>
+<div style="overflow-x:auto;margin:1.2em 0;">
+<table style="width:100%;border-collapse:separate;border-spacing:0;font-size:15.5px;border:1px solid #eee3cf;border-radius:14px;overflow:hidden;">
+<thead><tr style="background:#f3ead2;color:#6b5320;"><th style="padding:12px 14px;text-align:left;font-weight:700;">구분</th><th style="padding:12px 14px;text-align:left;font-weight:700;">내용</th></tr></thead>
+<tbody>
+<tr><td style="padding:11px 14px;border-top:1px solid #f0e8d6;"><strong>면세</strong></td><td style="padding:11px 14px;border-top:1px solid #f0e8d6;">150달러 (미국발 200달러)까지</td></tr>
+<tr style="background:#faf7f0;"><td style="padding:11px 14px;border-top:1px solid #f0e8d6;"><strong>관세율</strong></td><td style="padding:11px 14px;border-top:1px solid #f0e8d6;">옷·신발 대체로 13% + 부가세 10%</td></tr>
+<tr><td style="padding:11px 14px;border-top:1px solid #f0e8d6;"><strong>FTA 0원</strong></td><td style="padding:11px 14px;border-top:1px solid #f0e8d6;">원산지가 미국 + 원산지증명 요건 충족 시</td></tr>
+</tbody>
+</table>
+</div>
+<p style="line-height:1.85;">즉 미국 브랜드라고 다 무관세가 아니라, <strong>실제 원산지</strong>가 관건이에요. 면세 기준과 계산법은 <a href="https://jaylog.co.kr/?p=19">면세 150달러·미국 200달러</a> 글에 정리해 뒀어요.</p>
+
+<div style="background:#fdf3ec;border:1px solid #f3d8c4;border-radius:16px;padding:18px 20px;margin:1.6em 0;font-size:16px;line-height:1.85;"><strong style="color:#c9713a;">⚠️ 주의</strong><br>인보이스에 'USA'라고 적혀 있어도 자동 무관세가 아니에요. 협정이 정한 원산지증명 요건을 갖춰야 하고, 개인 직구에선 이를 맞추기 어려운 경우가 많습니다.</div>
+
+<!--본문이미지2-->
+
+<h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">사이즈 안 맞으면? 반품·환급</span></h2>
+<p style="line-height:1.85;">의류 직구의 최대 변수는 사이즈예요. 만약 세금을 내고 받았는데 사이즈가 안 맞아 <strong>반품(재수출)</strong>한다면, 낸 관세·부가세를 <strong style="color:#d2691e;">환급</strong>받을 수 있어요. 통관 후 정해진 기간 안에 반품하고, 반품 사실을 증빙할 자료(반품 라벨·영수증 등)를 남겨두는 게 핵심입니다.</p>
+<p style="line-height:1.85;">환급 절차가 궁금하면 <a href="https://jaylog.co.kr/?p=284">과오납 관세 환급 신청법</a>을 참고하세요. 그래서 옷은 처음부터 사이즈표를 꼼꼼히 보고, 애매하면 한 사이즈만 사보는 게 안전해요.</p>
+
+<!--본문이미지3-->
+
+<h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">많이 묻는 것</span></h2>
+<p style="line-height:1.85;"><strong>여러 벌 나눠 사면 면세 되나요?</strong> — 같은 날 한 사람 앞으로 들어오면 <a href="https://jaylog.co.kr/?p=32">합산</a>돼 볼 수 있어요. 나눠 산다고 무조건 면세는 아니에요.</p>
+<p style="line-height:1.85;"><strong>세금이 얼마 나올지 미리 알 수 있나요?</strong> — 금액과 품목(의류)을 넣어 계산기로 확인하면 대략 나와요. 아래 버튼으로 미리 계산해 보세요.</p>
+
+<div style="background:#fbf6ea;border:1px solid #ecdcb5;border-radius:16px;padding:18px 20px;margin:1.7em 0;font-size:16.5px;line-height:1.8;">
+<strong>🔑 핵심만</strong> — 의류 직구는 <strong style="color:#d2691e;">옷·신발 관세 13%</strong>가 포인트예요. 미국 사이트라고 무관세가 아니라 실제 원산지가 미국이어야 하고, 면세 150달러(미국 200달러) 안이면 어차피 세금이 없어요.</div>
+
+<p style="line-height:1.85;">정리하면 의류 직구는 세율이 높은 만큼 면세 기준을 잘 활용하는 게 핵심이에요. 원산지와 사이즈만 챙기면, 국내보다 훨씬 합리적으로 옷장을 채울 수 있습니다.</p>
+
+<p style="font-size:14px;color:#888;line-height:1.75;"><em>본 글은 2026년 8월 기준 일반 정보이며, 세율·FTA 요건은 품목·협정에 따라 다를 수 있습니다. 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사 확인이 필요합니다.</em></p>
+</div>
