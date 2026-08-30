@@ -81,3 +81,6 @@ body3_image_alt: 사이즈가 안 맞아 반품용으로 옷을 다시 담는 �
 
 <p style="font-size:14px;color:#888;line-height:1.75;"><em>본 글은 2026년 8월 기준 일반 정보이며, 세율·FTA 요건은 품목·협정에 따라 다를 수 있습니다. 개별 사안은 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125) 또는 관세사 확인이 필요합니다.</em></p>
 </div>
+
+
+<!-- 등록됨: post 458 / publish / 2026-08-30T13:44:11 / media 454 -->
