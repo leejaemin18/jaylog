@@ -72,6 +72,7 @@ body3_image_alt: 사이즈가 안 맞아 반품용으로 옷을 다시 담는 �
 <h2 class="wp-block-heading" style="font-size:1.4em;font-weight:800;color:#33352f;margin:2.1em 0 .7em;line-height:1.5;"><span style="background:linear-gradient(transparent 60%,#ffe89e 60%);padding:0 3px;">많이 묻는 것</span></h2>
 <p style="line-height:1.85;"><strong>여러 벌 나눠 사면 면세 되나요?</strong> — 같은 날 한 사람 앞으로 들어오면 <a href="https://jaylog.co.kr/?p=32">합산</a>돼 볼 수 있어요. 나눠 산다고 무조건 면세는 아니에요.</p>
 <p style="line-height:1.85;"><strong>세금이 얼마 나올지 미리 알 수 있나요?</strong> — 금액과 품목(의류)을 넣어 계산기로 확인하면 대략 나와요. 아래 버튼으로 미리 계산해 보세요.</p>
+<p style="line-height:1.85;"><strong>신발은 옷이랑 관세가 다른가요?</strong> — 대부분 비슷한 13% 수준이지만, 소재(가죽·고무·섬유)에 따라 세율이 조금씩 달라요. 그래서 같은 값이어도 품목에 따라 세금이 달라질 수 있으니, 계산기로 확인하는 게 정확합니다.</p>
 
 <div style="background:#fbf6ea;border:1px solid #ecdcb5;border-radius:16px;padding:18px 20px;margin:1.7em 0;font-size:16.5px;line-height:1.8;">
 <strong>🔑 핵심만</strong> — 의류 직구는 <strong style="color:#d2691e;">옷·신발 관세 13%</strong>가 포인트예요. 미국 사이트라고 무관세가 아니라 실제 원산지가 미국이어야 하고, 면세 150달러(미국 200달러) 안이면 어차피 세금이 없어요.</div>
