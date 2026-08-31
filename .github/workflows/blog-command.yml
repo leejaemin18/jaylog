@@ -34,6 +34,7 @@ on:
           - export-content  # 발행·예약 글 전체 본문을 review/ 폴더로 내려받아 커밋(품질 평가용)
           - create-calculator-page # 관부가세 계산기 전용 페이지 생성/갱신 (글은 링크만)
           - create-wizard-page # 직구 통관 진단 마법사 페이지 생성/갱신 (독자 가치 자산)
+          - create-home-page # 대문(홈) 랜딩 페이지 생성/갱신 + 정적 홈 지정
           - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
           - site-audit      # 페이지·저자·글수 현황을 review/site-audit.txt로 (애드센스 재점검)
           - enhance-pages   # 소개 페이지 E-E-A-T 보강 + 저자 bio 설정 (애드센스 대응)
@@ -152,6 +153,18 @@ jobs:
           git commit -m "진단 마법사 페이지 링크 기록 [bot]" || echo "변경 없음"
           for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
+      - name: 대문 홈 페이지 생성 (create-home-page 명령일 때만)
+        if: inputs.command == 'create-home-page'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/create_home_page.py
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/home-page.txt
+          git commit -m "대문 홈 페이지 링크 기록 [bot]" || echo "변경 없음"
+          for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
+
       - name: 수정본 적용 (apply-revisions 명령일 때만)
         if: inputs.command == 'apply-revisions'
         env:
@@ -216,7 +229,7 @@ jobs:
           for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'create-wizard-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo' && inputs.command != 'humanize-audit'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'create-wizard-page' && inputs.command != 'create-home-page' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo' && inputs.command != 'humanize-audit'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
