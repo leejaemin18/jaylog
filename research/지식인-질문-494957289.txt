@@ -1,0 +1,4 @@
+# 지식iN 질문 원문 — docId 494957289
+URL: https://m.kin.naver.com/mobile/qna/detail.naver?d1id=4&docId=494957289
+
+가져오기 실패: __ERR__ HTTP Error 400: Bad Request
