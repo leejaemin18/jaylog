@@ -33,6 +33,11 @@ HOWTO = (
     '큰 금액을 앞두고 있다면 계산기로 대략을 잡은 뒤, '
     '<a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a> 예상세액 조회나 '
     '국번없이 125로 최종 확인하는 것을 권합니다.</p>\n'
+    '<h2 class="wp-block-heading">세금 말고 통관 자체가 궁금하다면</h2>\n'
+    '<p>전파인증에 걸리는지, 목록통관이 되는지, 수량 한도나 검역은 없는지 등 '
+    '세금 외의 통관 걸림돌까지 한 번에 확인하려면 '
+    '<a href="https://jaylog.co.kr/customs-wizard/"><strong>직구 통관 종합 진단</strong></a>을 이용해 보세요. '
+    '나라·품목·금액만 고르면 면세 여부부터 인증·검역·개별소비세·합산과세까지 근거와 함께 짚어 드립니다.</p>\n'
 )
 
 CONTENT = INTRO + WIDGET + "\n" + HOWTO
