@@ -12,8 +12,17 @@ on:
         description: "대상 글 번호"
         required: true
       image:
-        description: "로컬 이미지 경로 (예: drafts/img/xxx-thumb.png)"
-        required: true
+        description: "대표(썸네일) 로컬 이미지 경로 (예: drafts/img/xxx-thumb.png)"
+        required: false
+      body_image:
+        description: "본문 이미지 경로 (선택, 예: drafts/img/xxx-body.png)"
+        required: false
+      body_anchor:
+        description: "이 문구가 든 소제목(h2) 앞에 본문 이미지 삽입 (선택)"
+        required: false
+      body_alt:
+        description: "본문 이미지 alt (선택)"
+        required: false
 
 jobs:
   swap:
@@ -29,4 +38,7 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           POST_ID: ${{ inputs.post_id }}
           IMAGE: ${{ inputs.image }}
+          BODY_IMAGE: ${{ inputs.body_image }}
+          BODY_ANCHOR: ${{ inputs.body_anchor }}
+          BODY_ALT: ${{ inputs.body_alt }}
         run: python3 .github/scripts/swap_thumb.py

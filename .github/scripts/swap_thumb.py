@@ -2,7 +2,7 @@
 # 지정한 글의 대표(썸네일) 이미지로 설정한다. OpenAI API를 쓰지 않는다(비용 0).
 # 입력(환경변수): POST_ID = 대상 글 번호, IMAGE = 로컬 이미지 경로
 # 필요한 시크릿: WP_APP_PASSWORD
-import os, json, base64, io, urllib.request
+import os, re, json, base64, io, urllib.request
 
 from PIL import Image
 
@@ -22,22 +22,55 @@ def wp(path, method="GET", data=None, raw=None, ctype="application/json", extra=
         return json.load(res)
 
 
-def main():
-    pid = os.environ["POST_ID"].strip()
-    img = os.environ["IMAGE"].strip()
-    if not os.path.exists(img):
-        raise SystemExit(f"이미지 없음: {img}")
+def upload(img):
     name = os.path.splitext(os.path.basename(img))[0]
-
     im = Image.open(img).convert("RGB")
     b = io.BytesIO()
     im.save(b, "JPEG", quality=88, optimize=True)
     media = wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
                extra={"Content-Disposition": f'attachment; filename="{name}.jpg"'})
     print(f"업로드: media {media['id']} ({media['source_url']})")
+    return media
 
-    wp(f"/posts/{pid}", "POST", {"featured_media": media["id"]})
-    print(f"post {pid} 대표 이미지 → media {media['id']} 로 교체 완료")
+
+def main():
+    pid = os.environ["POST_ID"].strip()
+    img = os.environ.get("IMAGE", "").strip()
+    body_img = os.environ.get("BODY_IMAGE", "").strip()
+    anchor = os.environ.get("BODY_ANCHOR", "").strip()  # 이 문구가 든 <h2> 앞에 본문이미지 삽입
+
+    # 1) 대표(썸네일) 이미지 교체
+    if img:
+        if not os.path.exists(img):
+            raise SystemExit(f"이미지 없음: {img}")
+        media = upload(img)
+        wp(f"/posts/{pid}", "POST", {"featured_media": media["id"]})
+        print(f"post {pid} 대표 이미지 → media {media['id']} 로 교체 완료")
+
+    # 2) 본문 이미지 삽입(있을 때만) — 이미 삽입돼 있으면 건너뜀
+    if body_img:
+        if not os.path.exists(body_img):
+            raise SystemExit(f"본문 이미지 없음: {body_img}")
+        media_b = upload(body_img)
+        post = wp(f"/posts/{pid}?context=edit&_fields=id,content")
+        raw = post["content"]["raw"]
+        if media_b["source_url"] in raw:
+            print("본문 이미지 이미 있음 — 건너뜀")
+        else:
+            fig = (f'<figure class="wp-block-image size-large"><img src="{media_b["source_url"]}" '
+                   f'alt="{os.environ.get("BODY_ALT", "")}" '
+                   f'style="border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);"/></figure>')
+            idx = -1
+            if anchor:
+                a = raw.find(anchor)
+                if a != -1:
+                    idx = raw.rfind("<h2", 0, a)
+            if idx == -1:  # 앵커 실패 시 두 번째 h2 앞
+                hs = [m.start() for m in re.finditer(r"<h2", raw)]
+                idx = hs[1] if len(hs) >= 2 else (hs[0] if hs else len(raw))
+            new = raw[:idx] + fig + raw[idx:]
+            wp(f"/posts/{pid}", "POST", {"content": new})
+            print(f"post {pid} 본문 이미지 삽입 완료 (media {media_b['id']})")
 
 
 if __name__ == "__main__":
