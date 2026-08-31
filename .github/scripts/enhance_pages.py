@@ -48,19 +48,19 @@ def main():
     except Exception as e:
         print(f"::warning::저자 bio 설정 실패 — {e}")
 
-    # 3) 문의 페이지에서 수익성 유도 문구 제거 (승인 전 '광고 목적 사이트' 인상 방지)
-    cps = wp("/pages?slug=contact&context=edit&_fields=id,content")
-    if cps:
-        cid = cps[0]["id"]
-        craw = cps[0]["content"]["raw"]
-        new = craw
-        for pat in (r"\s*<li>[^<]*제휴[^<]*</li>", r"\s*<li>[^<]*광고[^<]*</li>"):
-            new = re.sub(pat, "", new)
-        if new != craw:
-            wp(f"/pages/{cid}", "POST", {"content": new})
-            print(f"✅ 문의 페이지 수익성 문구 제거: id {cid}")
+    # 3) 문의 페이지를 pages/contact.html 내용으로 갱신 (얇은 213자 → 충실한 안내)
+    try:
+        contact_html = open("pages/contact.html", encoding="utf-8").read().strip()
+        cps = wp("/pages?slug=contact&status=publish,draft&_fields=id")
+        if cps:
+            cid = cps[0]["id"]
+            wp(f"/pages/{cid}", "POST", {"content": contact_html})
+            n = len(text_of(contact_html).replace("\n", "").replace(" ", ""))
+            print(f"✅ 문의 페이지 갱신: id {cid} ({n}자)")
         else:
-            print("문의 페이지: 제거할 수익성 문구 없음")
+            print("::warning::contact 슬러그 페이지를 찾지 못함 — 수동 확인 필요")
+    except FileNotFoundError:
+        print("::warning::pages/contact.html 없음 — 문의 페이지 갱신 건너뜀")
 
     # 4) 문의/면책 덤프(점검용)
     os.makedirs("review", exist_ok=True)
