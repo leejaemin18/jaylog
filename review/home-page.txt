@@ -1,0 +1,3 @@
+id=466
+link=https://jaylog.co.kr/home/
+front_set=True
