@@ -1,4 +1,8 @@
 # 지식iN 질문 원문 — docId 494957289
-URL: https://m.kin.naver.com/mobile/qna/detail.naver?d1id=4&docId=494957289
+URL: https://m.kin.naver.com/mobile/qna/detail.naver?d1id=4&dirId=40310&docId=494957289
 
-가져오기 실패: __ERR__ HTTP Error 400: Bad Request
+제목(og:title): 이베이에서 물건 구매했는데 관세 얼마일까요
+요약(og:description): 이베이에서 배송비 포함 256.16달러 짜리 마우스를 구매하려는데 관세가 얼마나 나올까요? 미국에서 배송옵니다
+
+본문 추출:
+이베이에서 배송비 포함 256.16달러 짜리 마우스를 구매하려는데 관세가 얼마나 나올까요? 미국에서 배송옵니다
