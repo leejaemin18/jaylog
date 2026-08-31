@@ -4,9 +4,9 @@
 [86] 소개 | slug=about | publish | 746자 | 조항:- | https://jaylog.co.kr/about/
 [192] 문의하기 | slug=contact | publish | 213자 | 조항:- | https://jaylog.co.kr/contact/
 [193] 면책고지 | slug=disclaimer | publish | 454자 | 조항:광고/애드센스 | https://jaylog.co.kr/disclaimer/
-[253] 관부가세 계산기 — 해외직구 예상 세금 바로 계산 | slug=gwanbuga-calculator | publish | 2785자 | 조항:- | https://jaylog.co.kr/gwanbuga-calculator/
+[253] 관부가세 계산기 — 해외직구 예상 세금 바로 계산 | slug=gwanbuga-calculator | publish | 3652자 | 조항:- | https://jaylog.co.kr/gwanbuga-calculator/
 
 === 저자(claude) ===
 id=4 name=jay2 bio=해외직구·통관 정보 블로그 '제이로그'를 운영합니다. 복잡한 통관·관세 규정을 50대 독자의 눈높이에서 쉽게 풀어 쓰고, 규정과 수치는 관세청 등 공식 자료로 확인해 2026년 기준으로 정확하게 전달하려 합니다.
 
-=== 글 수 === 발행 22 / 예약 1 / 초안 1
+=== 글 수 === 발행 37 / 예약 0 / 초안 0
