@@ -35,15 +35,25 @@ def main():
     pid = r["id"]
     link = r["link"]
 
-    # 정적 프런트 지정 시도 (admin 권한 필요)
+    # 글 목록(블로그) 페이지 확보 — 정적 홈으로 바꾸면 전체 글 보기 경로가 필요
+    blog = wp("/pages?slug=blog&status=publish,draft&_fields=id")
+    if blog:
+        blog_id = blog[0]["id"]
+        print(f"블로그 목록 페이지 존재: id {blog_id}")
+    else:
+        b = wp("/pages", "POST", {"title": "블로그", "slug": "blog", "status": "publish", "content": ""})
+        blog_id = b["id"]
+        print(f"✅ 블로그 목록 페이지 생성: id {blog_id}")
+
+    # 정적 프런트 + 글 목록 페이지 지정 (admin 권한 필요)
     front_ok = False
     try:
-        wp("/settings", "POST", {"show_on_front": "page", "page_on_front": pid})
+        wp("/settings", "POST", {"show_on_front": "page", "page_on_front": pid, "page_for_posts": blog_id})
         front_ok = True
-        print(f"✅ 정적 홈페이지로 지정 완료 (page_on_front={pid})")
+        print(f"✅ 정적 홈페이지 지정 완료 (홈={pid}, 글목록={blog_id})")
     except urllib.error.HTTPError as e:
         print(f"::warning::정적 홈페이지 자동 지정 실패({e.code}) — WP 관리자 > 설정 > 읽기 에서 "
-              f"'정적인 페이지' → 홈페이지를 '제이로그 — 해외직구·통관 가이드'로 직접 지정하세요.")
+              f"홈페이지='제이로그 — 해외직구·통관 가이드', 글 페이지='블로그'로 직접 지정하세요.")
     except Exception as e:
         print(f"::warning::정적 홈페이지 자동 지정 실패 — {e}")
 
