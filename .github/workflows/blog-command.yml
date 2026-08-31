@@ -36,6 +36,7 @@ on:
           - create-wizard-page # 직구 통관 진단 마법사 페이지 생성/갱신 (독자 가치 자산)
           - create-home-page # 대문(홈) 랜딩 페이지 생성/갱신 + 정적 홈 지정
           - setup-nav # 헤더 정리(제목·태그라인 + 깔끔한 메인/푸터 메뉴)
+          - add-tool-links # 전 글에 관련 도구(진단·계산기) 박스 삽입(주제별 문구·멱등)
           - apply-revisions # revisions/post-*.html 수정본을 각 글에 일괄 적용
           - site-audit      # 페이지·저자·글수 현황을 review/site-audit.txt로 (애드센스 재점검)
           - enhance-pages   # 소개 페이지 E-E-A-T 보강 + 저자 bio 설정 (애드센스 대응)
@@ -173,6 +174,13 @@ jobs:
         run: |
           python3 .github/scripts/setup_nav.py
 
+      - name: 도구 링크 삽입 (add-tool-links 명령일 때만)
+        if: inputs.command == 'add-tool-links'
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: |
+          python3 .github/scripts/add_tool_links.py
+
       - name: 수정본 적용 (apply-revisions 명령일 때만)
         if: inputs.command == 'apply-revisions'
         env:
@@ -237,7 +245,7 @@ jobs:
           for i in 1 2 3 4; do git pull --rebase origin main && git push origin main && break; git rebase --abort 2>/dev/null || true; sleep $((2**i)); done
 
       - name: 블로그 명령 실행
-        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'create-wizard-page' && inputs.command != 'create-home-page' && inputs.command != 'setup-nav' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo' && inputs.command != 'humanize-audit'
+        if: inputs.command != 'add-calculator' && inputs.command != 'fix-posts' && inputs.command != 'install-plugins' && inputs.command != 'create-pages' && inputs.command != 'seo-boost' && inputs.command != 'set-focus' && inputs.command != 'seo-audit' && inputs.command != 'add-related' && inputs.command != 'add-body-images' && inputs.command != 'export-content' && inputs.command != 'create-calculator-page' && inputs.command != 'create-wizard-page' && inputs.command != 'create-home-page' && inputs.command != 'setup-nav' && inputs.command != 'add-tool-links' && inputs.command != 'apply-revisions' && inputs.command != 'site-audit' && inputs.command != 'enhance-pages' && inputs.command != 'geo-audit' && inputs.command != 'backfill-geo' && inputs.command != 'humanize-audit'
         env:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           COMMAND: ${{ inputs.command }}
