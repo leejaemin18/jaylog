@@ -55,3 +55,6 @@ body_image_alt: 무상표 노트북 옆에 세금 계산서와 계산기가 놓�
 
 <p><em>본 글은 일반 정보 안내이며 2026년 기준입니다. 품목분류(HS코드)와 상황에 따라 세액·통관은 달라질 수 있으니, 확실치 않을 땐 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에 확인하세요.</em></p>
 </div>
+
+
+<!-- 등록됨: post 541 / publish / 2026-09-02T21:17:07 / media 없음(썸네일필요) -->
