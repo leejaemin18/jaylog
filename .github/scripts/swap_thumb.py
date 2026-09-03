@@ -38,6 +38,34 @@ def main():
     img = os.environ.get("IMAGE", "").strip()
     body_img = os.environ.get("BODY_IMAGE", "").strip()
     anchor = os.environ.get("BODY_ANCHOR", "").strip()  # 이 문구가 든 <h2> 앞에 본문이미지 삽입
+    move_src = os.environ.get("MOVE_SRC", "").strip()   # 이미 삽입된 본문 figure를 올바른 위치로 이동(+alt 수정)
+
+    # 0) 본문 이미지 재배치 모드 — 이미 삽입된 figure(파일명 일부=move_src)를 지워서 anchor h2 앞으로 옮기고 alt를 교정
+    if move_src:
+        post = wp(f"/posts/{pid}?context=edit&_fields=id,content")
+        raw = post["content"]["raw"]
+        pat = re.compile(r'<figure class="wp-block-image size-large"><img src="([^"]*'
+                         + re.escape(move_src) + r'[^"]*)"[^>]*></figure>')
+        m = pat.search(raw)
+        if not m:
+            raise SystemExit(f"이동할 figure 못 찾음: {move_src}")
+        src_url = m.group(1)
+        raw2 = raw[:m.start()] + raw[m.end():]
+        fig = (f'<figure class="wp-block-image size-large"><img src="{src_url}" '
+               f'alt="{os.environ.get("BODY_ALT", "")}" '
+               f'style="border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);"/></figure>')
+        if not anchor:
+            raise SystemExit("이동 모드에는 body_anchor가 필요합니다.")
+        a = raw2.find(anchor)
+        if a == -1:
+            raise SystemExit(f"앵커 못 찾음(이동): {anchor}")
+        idx = raw2.rfind("<h2", 0, a)
+        if idx == -1:
+            raise SystemExit(f"앵커 앞 h2 못 찾음(이동): {anchor}")
+        new = raw2[:idx] + fig + raw2[idx:]
+        wp(f"/posts/{pid}", "POST", {"content": new})
+        print(f"post {pid} 본문 figure 재배치+alt 수정 완료 ({move_src} → '{anchor}' h2 앞)")
+        return
 
     # 1) 대표(썸네일) 이미지 교체
     if img:

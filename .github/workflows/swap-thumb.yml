@@ -23,6 +23,9 @@ on:
       body_alt:
         description: "본문 이미지 alt (선택)"
         required: false
+      move_src:
+        description: "재배치 모드: 이미 삽입된 본문 figure의 파일명 일부. body_anchor h2 앞으로 옮기고 alt 교정 (선택)"
+        required: false
 
 jobs:
   swap:
@@ -41,4 +44,5 @@ jobs:
           BODY_IMAGE: ${{ inputs.body_image }}
           BODY_ANCHOR: ${{ inputs.body_anchor }}
           BODY_ALT: ${{ inputs.body_alt }}
+          MOVE_SRC: ${{ inputs.move_src }}
         run: python3 .github/scripts/swap_thumb.py
