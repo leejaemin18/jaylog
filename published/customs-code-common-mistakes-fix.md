@@ -110,3 +110,6 @@ body3_image_alt: 노트북과 스마트폰으로 통관 상태를 조회하는 �
 
 <p><em>본 글은 일반 정보 안내이며 2026년 기준입니다. 개인통관고유부호 갱신·정정 절차와 규정은 바뀔 수 있으니, 정확한 내용은 <a href="https://unipass.customs.go.kr" target="_blank" rel="noopener">관세청 유니패스</a>(국번없이 125)에서 확인하세요.</em></p>
 </div>
+
+
+<!-- 등록됨: post 581 / publish / 2026-09-05T10:04:18 / media 없음(썸네일필요) -->
