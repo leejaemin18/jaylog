@@ -26,6 +26,9 @@ on:
       move_src:
         description: "재배치 모드: 이미 삽입된 본문 figure의 파일명 일부. body_anchor h2 앞으로 옮기고 alt 교정 (선택)"
         required: false
+      new_title:
+        description: "글 제목 변경 (선택, 포커스 키워드 앞배치 등)"
+        required: false
 
 jobs:
   swap:
@@ -45,4 +48,5 @@ jobs:
           BODY_ANCHOR: ${{ inputs.body_anchor }}
           BODY_ALT: ${{ inputs.body_alt }}
           MOVE_SRC: ${{ inputs.move_src }}
+          NEW_TITLE: ${{ inputs.new_title }}
         run: python3 .github/scripts/swap_thumb.py

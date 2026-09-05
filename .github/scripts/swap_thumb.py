@@ -39,6 +39,12 @@ def main():
     body_img = os.environ.get("BODY_IMAGE", "").strip()
     anchor = os.environ.get("BODY_ANCHOR", "").strip()  # 이 문구가 든 <h2> 앞에 본문이미지 삽입
     move_src = os.environ.get("MOVE_SRC", "").strip()   # 이미 삽입된 본문 figure를 올바른 위치로 이동(+alt 수정)
+    new_title = os.environ.get("NEW_TITLE", "").strip()  # 글 제목 변경(포커스 키워드 앞배치 등)
+
+    # 00) 제목 변경(있을 때만)
+    if new_title:
+        wp(f"/posts/{pid}", "POST", {"title": new_title})
+        print(f"post {pid} 제목 변경 완료: {new_title}")
 
     # 0) 본문 이미지 재배치 모드 — 이미 삽입된 figure(파일명 일부=move_src)를 지워서 anchor h2 앞으로 옮기고 alt를 교정
     if move_src:

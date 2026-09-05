@@ -1,5 +1,5 @@
 ---
-title: 직구 통관이 자꾸 막힌다면 — 개인통관부호·영문 이름·주소 실수와 정정법
+title: 개인통관부호 때문에 직구 통관 막혔다면 — 이름·주소 실수와 정정법
 slug: customs-code-common-mistakes-fix
 tags: [개인통관고유부호, 통관 지연, 직구 통관 실수, 영문주소, 통관부호 갱신]
 category: 6
