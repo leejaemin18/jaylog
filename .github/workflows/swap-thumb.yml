@@ -29,12 +29,6 @@ on:
       new_title:
         description: "글 제목 변경 (선택, 포커스 키워드 앞배치 등)"
         required: false
-      replace_from:
-        description: "본문 문구 교체 - 찾을 문구 (선택, 한글 그대로)"
-        required: false
-      replace_to:
-        description: "본문 문구 교체 - 바꿀 문구 (선택, 한글 그대로)"
-        required: false
 
 jobs:
   swap:
@@ -55,6 +49,4 @@ jobs:
           BODY_ALT: ${{ inputs.body_alt }}
           MOVE_SRC: ${{ inputs.move_src }}
           NEW_TITLE: ${{ inputs.new_title }}
-          REPLACE_FROM: ${{ inputs.replace_from }}
-          REPLACE_TO: ${{ inputs.replace_to }}
         run: python3 .github/scripts/swap_thumb.py
