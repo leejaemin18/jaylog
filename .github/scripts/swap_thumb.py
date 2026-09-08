@@ -46,6 +46,19 @@ def main():
         wp(f"/posts/{pid}", "POST", {"title": new_title})
         print(f"post {pid} 제목 변경 완료: {new_title}")
 
+    # 00-b) 본문 문구 교체 모드 — REPLACE_FROM 문구를 REPLACE_TO로 1:1 치환(마무리에 포커스 키워드 넣기 등)
+    replace_from = os.environ.get("REPLACE_FROM", "").strip()
+    if replace_from:
+        replace_to = os.environ.get("REPLACE_TO", "")
+        post = wp(f"/posts/{pid}?context=edit&_fields=id,content")
+        raw = post["content"]["raw"]
+        if replace_from not in raw:
+            raise SystemExit(f"교체할 문구 못 찾음: {replace_from}")
+        new = raw.replace(replace_from, replace_to)
+        wp(f"/posts/{pid}", "POST", {"content": new})
+        print(f"post {pid} 본문 문구 교체 완료")
+        return
+
     # 0) 본문 이미지 재배치 모드 — 이미 삽입된 figure(파일명 일부=move_src)를 지워서 anchor h2 앞으로 옮기고 alt를 교정
     if move_src:
         post = wp(f"/posts/{pid}?context=edit&_fields=id,content")
