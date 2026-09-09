@@ -166,9 +166,12 @@ def process(path):
         post["status"] = "publish"
     elif mode == "draft":
         post["status"] = "draft"
-    else:  # auto → 하루 1개 예약 큐
+    else:  # auto → 하루 1개 예약 큐 / 'YYYY-MM-DDTHH:MM(:SS)' 명시 시 그 시각(KST)으로 예약
         post["status"] = "future"
-        post["date"] = next_slot()
+        if re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}", str(mode)):
+            post["date"] = mode
+        else:
+            post["date"] = next_slot()
     created = wp("/posts", "POST", post)
     when = created.get("date", "")
     flags = []
