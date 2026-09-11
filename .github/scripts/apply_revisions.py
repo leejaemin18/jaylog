@@ -41,7 +41,9 @@ def resolve_local_images(body):
     """src="LOCAL:<name>" 을 실제 업로드 URL로 치환."""
     for name in sorted(set(re.findall(r'src="LOCAL:([^"]+)"', body))):
         url = upload_local_media(name)
-        body = body.replace(f'LOCAL:{name}', url)
+        # 닫는 따옴표까지 포함해 정확히 치환 — 그러지 않으면 'body'가 'body2/3/4'의
+        # 앞부분까지 바꿔(부분 문자열) URL이 깨진다(첫 장만 정상). (2026-09-11 수정)
+        body = body.replace(f'LOCAL:{name}"', f'{url}"')
     return body
 
 
