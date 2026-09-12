@@ -108,7 +108,9 @@ def process(path):
     #   승인 스타일대로 둥근 모서리+옅은 그림자 적용.
     IMG_STYLE = "border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);"
     alt = meta.get("body_image_alt", title)
-    body_slots = [("body", "<!--본문이미지-->"), ("body2", "<!--본문이미지2-->"), ("body3", "<!--본문이미지3-->")]
+    # 2026-09-12 지시: 본문 이미지 최소 4장 → body4 슬롯까지 지원.
+    body_slots = [("body", "<!--본문이미지-->"), ("body2", "<!--본문이미지2-->"),
+                  ("body3", "<!--본문이미지3-->"), ("body4", "<!--본문이미지4-->")]
     first_ok = None
     for i, (suffix, marker) in enumerate(body_slots):
         # 첫 장은 body_image_brief가 있을 때만(하위호환), 2·3장은 로컬 파일 있으면
