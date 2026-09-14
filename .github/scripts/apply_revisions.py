@@ -3,7 +3,7 @@
 # 본문에 src="LOCAL:<파일명>" 이 있으면 drafts/img/<파일명>.(png|jpg…) 를 WP 미디어로 올리고
 #   그 URL로 치환한다(본문 이미지 여러 장 삽입용, API 미호출·로컬 드라이브 이미지).
 # 글 단위 실패 격리. 원문 백업은 review/post-{id}.md 에 이미 있음.
-import os, re, json, base64, glob, io, urllib.request
+import os, re, json, base64, glob, io, urllib.request, urllib.error
 
 from PIL import Image
 
@@ -80,7 +80,24 @@ def main():
                         print(f"    대표이미지 설정: {meta['featured_local']} → media {m['id']}")
                     except Exception as e:
                         print(f"::warning::id {pid} 대표이미지 실패 — {e}")
-            r = wp(f"/posts/{pid}", "POST", payload)
+            try:
+                r = wp(f"/posts/{pid}", "POST", payload)
+            except urllib.error.HTTPError as he:
+                # 글 ID가 어긋난 경우(404): revision json의 slug로 실제 ID를 찾아 재시도
+                slug = None
+                if os.path.exists(metaf):
+                    slug = json.load(open(metaf, encoding="utf-8")).get("slug")
+                if he.code == 404 and slug:
+                    found = wp(f"/posts?slug={slug}&status=publish,future,draft,private&_fields=id")
+                    if found:
+                        real = found[0]["id"]
+                        r = wp(f"/posts/{real}", "POST", payload)
+                        print(f"    ID 보정: {pid} → {real} (slug={slug})")
+                        pid = real
+                    else:
+                        raise RuntimeError(f"slug '{slug}'로도 글을 못 찾음")
+                else:
+                    raise
             done += 1
             print(f"✅ 적용: id {pid} | {r['title']['rendered'][:36]}")
         except Exception as e:
