@@ -23,8 +23,8 @@ def wp(path, method="GET", data=None, raw=None, ctype="application/json", extra=
         return json.load(res)
 
 
-def upload_local_media(name):
-    """drafts/img/<name>.(png|jpg…) 를 WP 미디어로 올리고 source_url을 돌려준다."""
+def upload_local_media_full(name):
+    """drafts/img/<name>.(png|jpg…) 를 WP 미디어로 올리고 media 객체(dict)를 돌려준다."""
     for ext in ("png", "jpg", "jpeg", "webp"):
         p = f"drafts/img/{name}.{ext}"
         if os.path.exists(p):
@@ -33,8 +33,13 @@ def upload_local_media(name):
             media = wp("/media", "POST", raw=b.getvalue(), ctype="image/jpeg",
                        extra={"Content-Disposition": f'attachment; filename="{name}.jpg"'})
             print(f"    로컬 이미지 업로드: {name} → media {media['id']}")
-            return media["source_url"]
+            return media
     raise RuntimeError(f"LOCAL 이미지 파일 없음: drafts/img/{name}.*")
+
+
+def upload_local_media(name):
+    """호환용 — source_url만 돌려준다."""
+    return upload_local_media_full(name)["source_url"]
 
 
 def resolve_local_images(body):
@@ -67,6 +72,14 @@ def main():
                 for k in ("excerpt", "title"):
                     if meta.get(k):
                         payload[k] = meta[k]
+                # featured_local: drafts/img/<name>.* 을 대표이미지(썸네일)로 설정
+                if meta.get("featured_local"):
+                    try:
+                        m = upload_local_media_full(meta["featured_local"])
+                        payload["featured_media"] = m["id"]
+                        print(f"    대표이미지 설정: {meta['featured_local']} → media {m['id']}")
+                    except Exception as e:
+                        print(f"::warning::id {pid} 대표이미지 실패 — {e}")
             r = wp(f"/posts/{pid}", "POST", payload)
             done += 1
             print(f"✅ 적용: id {pid} | {r['title']['rendered'][:36]}")
