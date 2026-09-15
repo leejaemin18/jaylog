@@ -103,3 +103,6 @@ body_image_alt: 세관 검사대 위에 놓인 무상표 영양제 병들과 검
 <p>몸에 좋으라고 하는 직구인데, 성분 하나 확인 안 해서 돈도 잃고 건강까지 해치면 억울하잖아요. 사기 전 딱 30초, 성분표와 반입차단 목록만 대조하면 대부분 피할 수 있습니다.</p>
 
 <p><em>이 글은 2026년 기준 일반 정보이며, 반입 가능 여부·처벌은 성분과 사안에 따라 다릅니다. 정확한 내용은 <a href="https://www.foodsafetykorea.go.kr" target="_blank" rel="noopener">식품안전나라</a> 또는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에 확인하시기 바랍니다.</em></p>
+
+
+<!-- 등록됨: post 946 / publish / 2026-09-15T10:52:52 / media 없음(썸네일필요) -->
