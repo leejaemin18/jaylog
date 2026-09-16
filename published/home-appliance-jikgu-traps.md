@@ -98,3 +98,6 @@ body_image_alt: 무상표 소형 가전과 여러 나라 플러그·변압기가
 <p>전자제품의 전파인증(1인 1대 면제) 규정은 <a href="https://jaylog.co.kr/?p=44">전자제품 직구와 전파인증</a>에, 안마의자·마사지기 같은 전기용품 인증은 <a href="https://jaylog.co.kr/?p=58">안마의자 직구 관세와 전기용품 인증</a>에 자세히 정리해 뒀어요. 싼 가격에 혹하기 전에 인증·전압·A/S부터 확인하면, 직구 가전도 얼마든지 똑똑하게 살 수 있습니다.</p>
 
 <p><em>이 글은 2026년 기준 일반 정보이며, 인증 면제 범위와 통관 요건은 품목·모델에 따라 다릅니다. 정확한 내용은 <a href="https://www.rra.go.kr" target="_blank" rel="noopener">국립전파연구원</a> 또는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에 확인하시기 바랍니다.</em></p>
+
+
+<!-- 등록됨: post 956 / publish / 2026-09-16T10:00:51 / media 없음(썸네일필요) -->
