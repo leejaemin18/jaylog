@@ -100,3 +100,6 @@ body_image_alt: 검사대 위 무상표 잡화와 안전 검사 장비가 놓인
 <!--본문이미지4-->
 
 <p><em>이 글은 2026년 기준 일반 정보이며, 안전기준·차단 품목은 수시로 바뀝니다. 정확한 내용은 <a href="https://www.consumer.go.kr" target="_blank" rel="noopener">소비자24</a> 또는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에 확인하시기 바랍니다.</em></p>
+
+
+<!-- 등록됨: post 969 / publish / 2026-09-17T13:06:31 / media 없음(썸네일필요) -->
