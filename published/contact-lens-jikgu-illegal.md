@@ -85,3 +85,6 @@ body_image_alt: 무상표 콘택트렌즈와 검안 장비가 놓인 장면
 <p>건강식품이나 일부 전자제품처럼 성분·인증 때문에 직구가 막히는 품목이 여럿 있는데(<a href="https://jaylog.co.kr/?p=946">직구 금지 성분</a> 참고), 콘택트렌즈는 그중에서도 '눈'이라는 이유로 특히 엄격합니다. 싸게 사려다 눈을 상하지 말고, 렌즈만큼은 꼭 대면으로 구매하세요.</p>
 
 <p><em>이 글은 2026년 기준 일반 정보이며, 규정·처벌은 사안에 따라 다를 수 있습니다. 정확한 내용은 <a href="https://www.mfds.go.kr" target="_blank" rel="noopener">식품의약품안전처</a> 또는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)에 확인하시기 바랍니다.</em></p>
+
+
+<!-- 등록됨: post 994 / publish / 2026-09-19T01:14:33 / media 없음(썸네일필요) -->
