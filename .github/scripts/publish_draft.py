@@ -63,6 +63,25 @@ def process(path):
     if not meta.get("answer_summary") or not meta.get("faq"):
         print(f"::warning::{title}: answer_summary/faq 누락 — GEO(요약·FAQ) 미적용. 규칙상 글마다 채워야 함")
 
+    # ⛔ 중복 등록 방지 (2026-09-19): 초안을 여러 번 푸시하면 publish-draft 실행이 겹쳐
+    #   같은 글이 두 번 등록될 수 있다. 등록 전에 같은 슬러그 글이 이미 있으면 재등록하지 않고
+    #   초안만 published/로 옮겨 파이프라인이 두 번 돌아도 중복이 생기지 않게 한다.
+    try:
+        existing = wp(f"/posts?slug={slug}&status=publish,future,draft,private&_fields=id")
+    except Exception as e:
+        print(f"::warning::슬러그 중복 확인 실패(계속 진행) — {e}")
+        existing = []
+    if existing:
+        eid = existing[0]["id"]
+        print(f"::warning::이미 등록된 글 발견(slug={slug} → post {eid}) — 중복 등록 건너뜀, 초안만 published/로 이동")
+        os.makedirs("published", exist_ok=True)
+        dest = os.path.join("published", os.path.basename(path))
+        shutil.move(path, dest)
+        with open(dest, "a", encoding="utf-8") as f:
+            f.write(f"\n\n<!-- 중복감지: 기존 post {eid}(slug {slug}) 있어 재등록 안 함 / "
+                    f"{datetime.datetime.now(KST).isoformat()} -->\n")
+        return True
+
     def upload_image(brief, suffix):
         """이미지 업로드. 우선순위: drafts/img/<슬러그>-<suffix>.(png|jpg…) 로컬 파일이 있으면
         그걸 쓰고(OpenAI Plus→드라이브→저장소 경유, API 비용 0), 없으면 OpenAI API로 생성.
