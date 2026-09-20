@@ -313,7 +313,7 @@ caption:
 #콘택트렌즈 #서클렌즈 #컬러렌즈 #해외직구 #의료기기 #직구주의 #제이로그
 
 ---
-## 23) [대기·카드필요] post 1004 EMS vs 특송 통관 차이
+## 23) [완료] [대기·카드필요] post 1004 EMS vs 특송 통관 차이
 local_image: insta-ems-express-card
 caption:
 해외직구, 같은 물건도 'EMS냐 특송이냐'에 따라 세금이 달라져요.
