@@ -327,7 +327,7 @@ EMS vs 특송 통관·관세 차이는 프로필 링크(jaylog.co.kr)에서.
 #EMS #특송 #해외직구 #관세 #통관 #직구꿀팁 #제이로그
 
 ---
-## 24) [대기·카드필요] post 1012 직구 통관 3단계
+## 24) post 1012 직구 통관 3단계
 local_image: insta-customs-stages-card
 caption:
 직구 세금·통관, 물건값에 따라 3단계로 갈려요.
