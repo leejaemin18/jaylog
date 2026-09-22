@@ -357,7 +357,7 @@ caption:
 #해외직구 #짝퉁 #가품 #통관 #상표권 #직구주의 #직구꿀팁 #제이로그
 
 ---
-## 26) post 1028 직구 되팔기·사업자 수입
+## 26) [완료] post 1028 직구 되팔기·사업자 수입
 local_image: insta-reselling-business-card
 caption:
 직구로 싸게 사서 되파는 것, 어디까지 괜찮을까요?
