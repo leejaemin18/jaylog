@@ -373,7 +373,7 @@ caption:
 #해외직구 #직구되팔기 #리셀 #관세 #자가사용 #구매대행 #직구꿀팁 #제이로그
 
 ---
-## 27) post 1036 귀국 이삿짐 통관
+## 27) [완료] post 1036 귀국 이삿짐 통관
 local_image: insta-moving-customs-card
 caption:
 해외살이 접고 귀국할 때, 이삿짐에 관세 붙을까요?
