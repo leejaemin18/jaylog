@@ -10,7 +10,39 @@ CID = os.environ["NAVER_CLIENT_ID"].strip()
 CSEC = os.environ["NAVER_CLIENT_SECRET"].strip()
 KST = datetime.timezone(datetime.timedelta(hours=9))
 ANCHOR = "해외직구"
-HDR = {"X-Naver-Client-Id": CID, "X-Naver-Client-Secret": CSEC}
+HUB = {"X-NCP-APIGW-API-KEY-ID": CID, "X-NCP-APIGW-API-KEY": CSEC}   # 네이버 클라우드 API HUB (이 계정 키)
+DEV = {"X-Naver-Client-Id": CID, "X-Naver-Client-Secret": CSEC}       # 구 개발자센터
+# 용도별 (주소, 헤더) 후보 — 위에서부터 시도, 성공한 조합을 기억
+COMBOS = {
+    "kin": [("https://naverapihub.apigw.ntruss.com/search/v1/kin", HUB),
+            ("https://openapi.naver.com/v1/search/kin.json", DEV)],
+    "blog": [("https://naverapihub.apigw.ntruss.com/search/v1/blog", HUB),
+             ("https://openapi.naver.com/v1/search/blog.json", DEV)],
+    "cafearticle": [("https://naverapihub.apigw.ntruss.com/search/v1/cafearticle", HUB),
+                    ("https://openapi.naver.com/v1/search/cafearticle.json", DEV)],
+    "datalab": [("https://naverapihub.apigw.ntruss.com/datalab/v1/search", HUB),
+                ("https://openapi.naver.com/v1/datalab/search", DEV)],
+}
+WORKING = {}
+
+
+def call(kind, qs=None, body=None):
+    """성공 조합을 찾아 JSON 반환. 모두 실패하면 마지막 오류를 올린다."""
+    combos = [WORKING[kind]] if kind in WORKING else COMBOS[kind]
+    last = None
+    for url, h in combos:
+        full = f"{url}?{qs}" if qs else url
+        hdr = {**h, "Content-Type": "application/json"} if body else h
+        try:
+            with urllib.request.urlopen(urllib.request.Request(full, data=body, headers=hdr), timeout=30) as res:
+                data = json.load(res)
+            if kind not in WORKING:
+                WORKING[kind] = (url, h)
+                print(f"[인증 OK] {kind}: {url}")
+            return data
+        except Exception as e:
+            last = e
+    raise last
 
 
 def load_keywords():
@@ -28,11 +60,9 @@ def load_keywords():
 
 
 def total(kind, kw):
-    qs = urllib.parse.urlencode({"query": kw, "display": 1})
-    req = urllib.request.Request(f"https://openapi.naver.com/v1/search/{kind}.json?{qs}", headers=HDR)
+    qs = urllib.parse.urlencode({"query": kw, "display": 1, "format": "json"})
     try:
-        with urllib.request.urlopen(req, timeout=30) as res:
-            return int(json.load(res).get("total", 0))
+        return int(call(kind, qs=qs).get("total", 0))
     except Exception as e:
         print(f"::warning::{kind} 실패({kw}): {e}")
         return None
@@ -49,11 +79,8 @@ def datalab(keywords):
                  [{"groupName": k, "keywords": [k]} for k in batch]
         body = json.dumps({"startDate": str(start), "endDate": str(end), "timeUnit": "month",
                            "keywordGroups": groups}).encode()
-        req = urllib.request.Request("https://openapi.naver.com/v1/datalab/search", data=body,
-                                     headers={**HDR, "Content-Type": "application/json"})
         try:
-            with urllib.request.urlopen(req, timeout=30) as res:
-                data = json.load(res)
+            data = call("datalab", body=body)
         except urllib.error.HTTPError as e:
             print(f"::warning::데이터랩 사용 불가(HTTP {e.code}) — 검색량 지수 생략: {e.read()[:150]}")
             return None
