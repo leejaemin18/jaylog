@@ -48,7 +48,8 @@ jobs:
         run: |
           git config user.name "Claude"
           git config user.email "noreply@anthropic.com"
-          git add review/site-structure.txt review/backup-structure 2>/dev/null || true
+          git add review/site-structure.txt 2>/dev/null || true
+          [ -d review/backup-structure ] && git add review/backup-structure || true
           git diff --cached --quiet && { echo "변경 없음"; exit 0; }
           git commit -m "사이트 구조 개편: ${{ inputs.step }} 기록 [bot]"
           for i in 1 2 3 4; do
