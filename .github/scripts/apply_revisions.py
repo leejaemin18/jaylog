@@ -7,6 +7,8 @@ import os, re, json, base64, glob, io, urllib.request, urllib.error
 
 from PIL import Image
 
+from jl_furniture import add_furniture
+
 USER = "claude"
 PW = os.environ["WP_APP_PASSWORD"]
 AUTH = base64.b64encode(f"{USER}:{PW}".encode()).decode()
@@ -65,6 +67,7 @@ def main():
             if len(body) < 300:
                 raise RuntimeError(f"본문이 너무 짧음({len(body)}자) — 생성 오류 의심")
             body = resolve_local_images(body)  # LOCAL: 이미지 있으면 업로드·치환
+            body = add_furniture(body)  # 목차 + 편집자 박스(멱등)
             payload = {"content": body}
             metaf = f.replace(".html", ".json")
             if os.path.exists(metaf):

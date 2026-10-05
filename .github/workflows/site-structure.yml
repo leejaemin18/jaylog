@@ -1,0 +1,58 @@
+name: 사이트 구조 개편
+
+# 브랜드형 정보 사이트 기준으로 jaylog를 단계별로 정비한다 (.github/scripts/site_structure.py).
+# 단계: profile(운영자 표시명·소개) → categories(카테고리 5개+재배정) → pages(신뢰 페이지)
+#       → home(대문) → furniture(전 글 목차+편집자 박스) → nav(메뉴)
+# 모든 단계는 멱등. dry_run=yes 면 쓰지 않고 계획만 출력.
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: "실행할 단계"
+        required: true
+        type: choice
+        options:
+          - profile
+          - categories
+          - pages
+          - home
+          - furniture
+          - nav
+      dry_run:
+        description: "yes = 미리보기만(쓰기 없음)"
+        required: false
+        default: "no"
+
+concurrency:
+  group: site-structure
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 단계 실행
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          STEP: ${{ inputs.step }}
+          DRY_RUN: ${{ inputs.dry_run == 'yes' && '1' || '' }}
+        run: python3 .github/scripts/site_structure.py
+
+      - name: 기록 커밋
+        if: always()
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/site-structure.txt review/backup-structure 2>/dev/null || true
+          git diff --cached --quiet && { echo "변경 없음"; exit 0; }
+          git commit -m "사이트 구조 개편: ${{ inputs.step }} 기록 [bot]"
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep $((2**i))
+          done
+          echo "::error::푸시 실패"; exit 1

@@ -6,6 +6,7 @@ import yaml
 from PIL import Image
 
 from geo_render import render_geo
+from jl_furniture import add_furniture
 
 WP_USER = "claude"
 WP_PW = os.environ["WP_APP_PASSWORD"]
@@ -24,6 +25,22 @@ def wp(path, method="GET", data=None, raw=None, ctype="application/json", extra=
     with urllib.request.urlopen(req, timeout=120) as res:
         return json.load(res)
 
+
+
+def resolve_category(cat):
+    """category: 숫자 id 또는 slug(customs-basics/duty-and-tax/country-and-shop/by-item/trouble-shooting).
+    slug를 못 찾으면 기본 6(통관 기초·조회)."""
+    c = str(cat).strip()
+    if c.isdigit():
+        return int(c)
+    try:
+        found = wp(f"/categories?slug={c}&_fields=id")
+        if found:
+            return found[0]["id"]
+    except Exception as e:
+        print(f"::warning::카테고리 조회 실패({c}) — {e}")
+    print(f"::warning::카테고리 '{c}' 없음 → 6으로 등록")
+    return 6
 
 def make_tag_ids(names):
     ids = []
@@ -173,11 +190,12 @@ def process(path):
 
     # 1-d) GEO(답변엔진 인용 대응): 상단 '한눈 요약' + 하단 'FAQ' + FAQPage JSON-LD
     body = render_geo(body, meta)
+    body = add_furniture(body)  # 목차 + 하단 편집자 박스 (2026-10-05 사이트 구조 개편)
 
     # 2) 글 등록 (예약 큐 맨 뒤)
     mode = meta.get("schedule", "now")  # 사용자 지시(2026-08-22): 예약 금지, 기본 즉시 발행
     post = {
-        "title": title, "content": body, "categories": [int(meta.get("category", 6))],
+        "title": title, "content": body, "categories": [resolve_category(meta.get("category", 6))],
         "tags": make_tag_ids(meta.get("tags", [])),
         "excerpt": meta.get("excerpt", ""),
     }
