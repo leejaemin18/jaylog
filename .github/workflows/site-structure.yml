@@ -19,6 +19,7 @@ on:
           - home
           - furniture
           - nav
+          - verify
       dry_run:
         description: "yes = 미리보기만(쓰기 없음)"
         required: false

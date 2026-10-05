@@ -302,8 +302,37 @@ def step_nav():
         log("ℹ️ 푸터 메뉴 위치 없음 — 푸터 링크는 대문·편집자 박스로 노출")
 
 
+def step_verify():
+    """렌더 결과 점검(읽기 전용): 동적 글목록 블록·목차·편집자 박스·메뉴가 실제로 출력되는지."""
+    def get(url):
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 jaylog-verify"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            return r.read().decode("utf-8", "replace")
+    for slug in ("home", "sitemap", "editor"):
+        pg = wp(f"/pages?slug={slug}&_fields=id,link,content")
+        if not pg:
+            log(f"::warning::/{slug}/ 없음"); continue
+        c = pg[0]["content"]["rendered"]
+        lists = c.count("wp-block-latest-posts")
+        items = len(re.findall(r"<li[^>]*>\s*<a[^>]*wp-block-latest-posts__post-title", c)) or c.count("<li><a")
+        log(f"/{slug}/ 렌더: 글목록 블록 {lists}개 · 링크 항목 약 {items}개 · 미치환 템플릿 {'있음' if '{{' in c else '없음'}")
+    post = wp("/posts?per_page=1&_fields=id,link,content")[0]
+    c = post["content"]["rendered"]
+    log(f"최신 글 {post['id']} 렌더: 목차 {'O' if 'jl-toc' in c else 'X'} · 편집자 박스 {'O' if 'jl-editor' in c else 'X'}")
+    try:
+        h = get(SITE + "/")
+        names = [n for _, n, _, _ in CATEGORIES]
+        log("대문 HTML 메뉴: " + ", ".join(f"{n}{'O' if n in h else 'X'}" for n in names))
+        log(f"대문 HTML 운영자 표기: {'제이 O' if '>제이<' in h else '제이 X'}")
+        a = get(post["link"])
+        log(f"글 HTML 작성자 표기: {'제이 O' if '제이' in a and 'jay2' not in a else ('jay2 남아있음' if 'jay2' in a else '?')}")
+    except Exception as e:
+        log(f"::warning::공개 HTML 확인 실패 — {e}")
+
+
 STEPS = {"profile": step_profile, "categories": step_categories, "pages": step_pages,
-         "home": step_home, "furniture": step_furniture, "nav": step_nav}
+         "home": step_home, "furniture": step_furniture, "nav": step_nav,
+         "verify": step_verify}
 
 
 def main():
