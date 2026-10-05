@@ -71,7 +71,7 @@ def add_furniture(body, min_h2=3):
     if len(items) >= min_h2:
         lis = "".join(
             f'<li style="margin:2px 0;"><a href="#{hid}" style="color:#2c4a8a;text-decoration:none;">'
-            f'{html.escape(label)}</a></li>' for hid, label in items)
+            f'{html.escape(label, quote=False)}</a></li>' for hid, label in items)
         toc = ('<!--jl-toc-->'
                '<nav class="jl-toc" aria-label="목차" style="margin:0 0 1.8em;padding:16px 20px;'
                'border:1px solid #e3e6ec;border-radius:12px;background:#fff;">'
