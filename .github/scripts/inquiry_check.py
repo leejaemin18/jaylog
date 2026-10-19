@@ -4,6 +4,7 @@
 #   review/inquiries-log.md   — 누적 기록
 # 에 남기고, 마지막으로 본 댓글 id를 review/inquiry-state.json 에 저장한다.
 # 처음 실행(상태 파일 없음)이면 최근 14일 댓글을 새 문의로 본다.
+# ⚠️ 저장소가 공개이므로 댓글 작성자·내용은 파일에 쓰지 않는다(개수·글 제목·링크만).
 import os, re, json, base64, html, datetime, urllib.request, urllib.error
 
 USER = "claude"
@@ -62,11 +63,11 @@ def main():
     now = datetime.datetime.now(KST)
     lines = []
     for c in sorted(found.values(), key=lambda x: x["id"]):
-        body = plain(c["content"].get("raw") or c["content"].get("rendered", ""))
         st = "승인대기" if c["status"] == "hold" else "공개"
         kind = "답글" if c.get("parent") else "새 댓글"
-        lines.append(f"- [{st}·{kind}] {c['date'][:16].replace('T', ' ')} · {c['author_name']} · "
-                     f"글: {titles.get(c['post'])}\n  내용: {body[:300]}\n  링크: {c['link']}")
+        # 저장소가 공개라 작성자·내용은 남기지 않는다(승인대기 댓글 노출 방지). 내용은 링크/WP 관리자에서 확인.
+        lines.append(f"- [{st}·{kind}] {c['date'][:16].replace('T', ' ')} · 글: {titles.get(c['post'])}\n"
+                     f"  링크: {c['link']}")
 
     os.makedirs("review", exist_ok=True)
     head = f"# 문의 확인 {now:%Y-%m-%d %H:%M} KST — 새 댓글 {len(lines)}개"
