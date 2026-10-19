@@ -1,10 +1,12 @@
 name: 문의(댓글) 확인
 
 # 지난 확인 이후 새로 달린 블로그 댓글을 review/inquiries-new.txt 로 정리한다.
-# 매일 아침 '제이로그 문의 확인' 루틴이 이 워크플로를 실행하고 결과를 사용자에게 알린다.
+# 매일 아침 08:07 KST에 자동 실행 → 08:52 KST '제이로그 문의 확인' 루틴이 결과 파일을 읽어 사용자에게 알린다.
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "7 23 * * *"   # 매일 08:07 KST
 
 concurrency:
   group: inquiry-check
