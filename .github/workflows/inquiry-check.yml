@@ -1,0 +1,38 @@
+name: 문의(댓글) 확인
+
+# 지난 확인 이후 새로 달린 블로그 댓글을 review/inquiries-new.txt 로 정리한다.
+# 매일 아침 '제이로그 문의 확인' 루틴이 이 워크플로를 실행하고 결과를 사용자에게 알린다.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: inquiry-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 새 댓글 확인
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/inquiry_check.py
+
+      - name: 결과 커밋
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/inquiries-new.txt review/inquiry-state.json
+          [ -f review/inquiries-log.md ] && git add review/inquiries-log.md || true
+          git diff --cached --quiet && { echo "변경 없음"; exit 0; }
+          git commit -m "문의 확인 [bot]"
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep $((2**i))
+          done
+          echo "::error::푸시 실패"; exit 1
