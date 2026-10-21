@@ -1,0 +1,73 @@
+name: 공식 자료 가져오기 (사실 확인용)
+
+# 작업 환경에서 국내 공공기관 사이트(관세청·법령 등)가 열리지 않을 때,
+# GitHub 러너에서 페이지를 받아 텍스트로 research/fetch/ 에 저장한다(글 수치 검증용).
+# 입력: urls(쉼표 구분), grep(선택 — 이 단어가 들어간 줄 앞뒤만 남김, 쉼표 구분)
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "가져올 주소 (쉼표 구분)"
+        required: true
+      grep:
+        description: "남길 키워드 (쉼표 구분, 비우면 전체 텍스트)"
+        required: false
+        default: ""
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 가져오기
+        env:
+          URLS: ${{ inputs.urls }}
+          GREP: ${{ inputs.grep }}
+        run: |
+          python3 - <<'EOF'
+          import os, re, html, datetime, urllib.request
+          urls = [u.strip() for u in os.environ["URLS"].split(",") if u.strip()]
+          keys = [k.strip() for k in os.environ.get("GREP", "").split(",") if k.strip()]
+          os.makedirs("research/fetch", exist_ok=True)
+          stamp = datetime.datetime.utcnow().strftime("%Y%m%d-%H%M")
+          for i, u in enumerate(urls, 1):
+              try:
+                  req = urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"})
+                  raw = urllib.request.urlopen(req, timeout=60).read()
+                  for enc in ("utf-8", "euc-kr", "cp949"):
+                      try:
+                          t = raw.decode(enc); break
+                      except UnicodeDecodeError:
+                          continue
+                  t = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", t)
+                  t = html.unescape(re.sub(r"<[^>]+>", "\n", t))
+                  lines = [l.strip() for l in t.splitlines() if l.strip()]
+                  if keys:
+                      keep = set()
+                      for n, l in enumerate(lines):
+                          if any(k in l for k in keys):
+                              keep.update(range(max(0, n - 3), min(len(lines), n + 4)))
+                      lines = [lines[n] for n in sorted(keep)]
+                  body = "\n".join(lines)
+              except Exception as e:
+                  body = f"가져오기 실패: {e}"
+              path = f"research/fetch/{stamp}-{i}.txt"
+              with open(path, "w", encoding="utf-8") as f:
+                  f.write(f"URL: {u}\n가져온 시각(UTC): {stamp}\n\n{body[:200000]}\n")
+              print(path, len(body))
+          EOF
+      - name: 커밋
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add research/fetch
+          git diff --cached --quiet && exit 0
+          git commit -m "공식 자료 가져오기 [bot]"
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep $((2**i))
+          done
+          exit 1
