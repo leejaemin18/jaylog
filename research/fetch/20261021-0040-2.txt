@@ -1,0 +1,4 @@
+URL: https://www.easylaw.go.kr/CSP/CnpClsMain.laf?csmSeq=1814&ccfNo=2&cciNo=1&cnpClsNo=1
+가져온 시각(UTC): 20261021-0040
+
+가져오기 실패: <urlopen error timed out>

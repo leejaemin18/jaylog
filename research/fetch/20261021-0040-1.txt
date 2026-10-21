@@ -1,0 +1,4 @@
+URL: https://www.customs.go.kr/kcs/ad/tax/BuyTaxCalculation.do
+가져온 시각(UTC): 20261021-0040
+
+가져오기 실패: <urlopen error timed out>
