@@ -1,12 +1,10 @@
 name: 문의(댓글) 확인
 
 # 지난 확인 이후 새로 달린 블로그 댓글을 review/inquiries-new.txt 로 정리한다.
-# 매일 아침 08:07 KST에 자동 실행 → 08:52 KST '제이로그 문의 확인' 루틴이 결과 파일을 읽어 사용자에게 알린다.
+# 자동 실행·알림은 사용자 지시로 중단(2026-10-27). 필요할 때 수동 실행만.
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "7 23 * * *"   # 매일 08:07 KST
 
 concurrency:
   group: inquiry-check
