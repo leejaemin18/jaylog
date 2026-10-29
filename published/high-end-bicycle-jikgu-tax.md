@@ -90,3 +90,6 @@ body_image_alt: 자전거 직구로 받은 카본 로드바이크 프레임과 �
 </ul>
 
 <p><em>이 글의 계산은 예시 환율을 쓴 추정치이며, 실제 세액은 품목분류와 통관 시점 환율에 따라 달라집니다. 정확한 세액과 FTA 적용 여부는 <a href="https://www.customs.go.kr" target="_blank" rel="noopener">관세청</a>(국번없이 125)이나 관세사에게 확인하세요.</em></p>
+
+
+<!-- 등록됨: post 1174 / publish / 2026-10-29T12:16:11 / media 없음(썸네일필요) -->
