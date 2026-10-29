@@ -1,0 +1,59 @@
+URL: https://wits.worldbank.org/tariff/trains/en/country/KOR/partner/WLD/product/871499
+가져온 시각(UTC): 20261029-0301
+
+Korea, Rep. tariffs on World for Cycles; parts thereof, n.e.s. in item no. 8714.9 | WITS data
+Most Favored Nation (MFN), Preferential Tariffs for year <%=strYear%>" />
+WITS
+En
+Es
+Metadata
+Data Availability
+Help
+Tariffs
+GPTAD
+UNCTAD TRAINS
+Non-Tariff Measures
+Summary
+By Country
+Visualization
+Delicious
+Email
+Custom Query
+Bilateral Tariff Technical Note
+Korea, Rep. tariffs on World for Cycles; parts thereof, n.e.s. in item no. 8714.9 imports
+Year: 2022
+Below table has data from UNCTAD TRAINS for
+Most Favored Nation (MFN) tariff
+and
+Applied tariff
+applied by
+Korea, Rep.
+on
+World
+for
+Cycles; parts thereof, n.e.s. in item no. 8714.9
+. MFN and Applied Tariff are provided for both traded and non-traded goods.
+Change selection (Country, Partner and Product)
+TRAINS
+Country
+TRAINS
+-->
+Download
+Tariff Measures
+Preference Benediciaries
+Tariff Measures
+Preference Benediciaries
+-->
+Col Head1
+>
+>>
+-->
+Note: UNCTAD method is used to convert specific duty rates into Ad valorem equivalents (AVEs). The sort icon on the column header can be used to sort the data and the filter icon can be used to narrow search results. Arrows at the bottom of the page allow navigating the data. To download an entire tariff schedule (raw data and specific duty estimated AVEs), the user needs to login to WITS and use Quick Search -> Tariff – View and Export Raw Data. To view Tariff Measures and preferential beneficiaries, use Support Materials menu after
+login
+.
+Applied Tariff:
+This rate includes preferential tariff when it exists. This rate is normally lower than the MFN Tariff, except in few cases where some countries apply a Non-MFN tariff  which is higher than MFN Tariff.
+A blank field of MFN Tariff/ Applied Tariff means that the rate was either not reported by the country or it is a specific tariff that could not be estimated using UNCTAD’s Advalorem Equivalent estimation method.
+About
+.
+Contact
