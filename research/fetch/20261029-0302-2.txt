@@ -1,0 +1,14 @@
+URL: https://wits.worldbank.org/API/V1/SDMX/V21/datasource/TRN/reporter/410/partner/000/product/871491/year/2022/datatype/reported
+가져온 시각(UTC): 20261029-0302
+
+DF_WITS_Tariff_TRAINS
+false
+2026-10-28T23:02:52
+World Bank Group - WITS
+WITS Admin
+DECDG
+Support
+wits@worldbank.org
+Information
+DF_WITS_Tariff_TRAINS_WBG_WITS_2026-10-28T230252
+2026-10-28T23:02:52
