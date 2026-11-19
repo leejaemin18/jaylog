@@ -137,13 +137,30 @@ def finish():
         f = os.path.join(OUT, path, "index.html") if path else os.path.join(OUT, "index.html")
         if not os.path.exists(f):
             missing.append(f"{i['id']} {i['link']}")
+    # 절대주소(og:image·srcset·JSON-LD 등)로 걸린 /wp-content/ 파일 중 아직 안 받은 것은 직접 받는다
+    # (도메인은 그대로 jaylog.co.kr 이므로, 파일만 있으면 새 호스팅에서도 열린다)
+    refs = set()
+    for r, _, fs in os.walk(OUT):
+        for f in fs:
+            if f.endswith((".html", ".css")):
+                txt = open(os.path.join(r, f), encoding="utf-8", errors="ignore").read().replace("\\/", "/")
+                refs |= set(re.findall(r"https://jaylog\.co\.kr(/wp-(?:content|includes)/[^\s\"'()<>,?#]+)", txt))
+    got = lost = 0
+    for ref in sorted(refs):
+        local = os.path.join(OUT, urllib.parse.unquote(ref).lstrip("/"))
+        if os.path.exists(local):
+            continue
+        try:
+            save_raw(urllib.parse.unquote(ref).lstrip("/"), fetch(SITE + ref, raw=True))
+            got += 1
+        except Exception:
+            lost += 1
+    leftover = f"참조 {len(refs)}개 중 추가로 받음 {got}개 / 못 받음 {lost}개"
     nfiles = sum(len(f) for _, _, f in os.walk(OUT))
     nhtml = sum(1 for _, _, fs in os.walk(OUT) for f in fs if f.endswith(".html"))
     size = sum(os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(OUT) for f in fs)
     big = [os.path.join(r, f) for r, _, fs in os.walk(OUT) for f in fs
            if os.path.getsize(os.path.join(r, f)) > 25 * 1024 * 1024]
-    leftover = sum(1 for r, _, fs in os.walk(OUT) for f in fs if f.endswith(".html")
-                   and "jaylog.co.kr/wp-content/" in open(os.path.join(r, f), errors="ignore").read())
 
     lines = [
         "# 무료 정적 사이트 빌드 점검",
@@ -151,7 +168,7 @@ def finish():
         f"전체 파일: {nfiles}개 (Cloudflare Pages 한도 20,000) / HTML: {nhtml}개",
         f"전체 용량: {size/1024/1024:.1f}MB / 25MB 넘는 파일: {len(big)}개 (한도 25MB)",
         f"?ver= 자산 사본: {fixed_assets}개 / 댓글 작성창 제거: {removed_forms}곳",
-        f"이미지를 아직 옛 서버 주소로 부르는 HTML: {leftover}개",
+        f"절대주소로 걸린 이미지·파일: {leftover}",
         f"404 페이지: {'있음' if os.path.exists(OUT + '/404.html') else '없음'}",
         f"?p= 이동 표: {len(mp)}개",
         "",
