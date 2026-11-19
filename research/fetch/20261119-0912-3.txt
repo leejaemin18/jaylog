@@ -1,0 +1,4 @@
+URL: https://dns.google/resolve?name=jaylog.co.kr&type=MX
+가져온 시각(UTC): 20261119-0912
+
+{"Status":0,"TC":false,"RD":true,"RA":true,"AD":false,"CD":false,"Question":[{"name":"jaylog.co.kr.","type":15}],"Authority":[{"name":"jaylog.co.kr.","type":6,"TTL":900,"data":"ns-1205.awsdns-22.org. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"}],"Comment":"Response from 205.251.192.246."}

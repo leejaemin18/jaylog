@@ -1,0 +1,4 @@
+URL: https://dns.google/resolve?name=jaylog.co.kr&type=A
+가져온 시각(UTC): 20261119-0912
+
+{"Status":0,"TC":false,"RD":true,"RA":true,"AD":false,"CD":false,"Question":[{"name":"jaylog.co.kr.","type":1}],"Answer":[{"name":"jaylog.co.kr.","type":1,"TTL":60,"data":"3.171.76.86"},{"name":"jaylog.co.kr.","type":1,"TTL":60,"data":"3.171.76.55"},{"name":"jaylog.co.kr.","type":1,"TTL":60,"data":"3.171.76.101"},{"name":"jaylog.co.kr.","type":1,"TTL":60,"data":"3.171.76.77"}],"Comment":"Response from 205.251.192.246."}
