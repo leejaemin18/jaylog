@@ -1,0 +1,75 @@
+name: 무료 정적 사이트 만들기
+
+# 워드프레스 서버를 끄기 전 '준비'용. 사이트 전체를 정적 파일로 떠서 점검 보고서(review/static-build.txt)를 남긴다.
+# deploy=true 일 때만 Cloudflare Pages에 올린다(시크릿 CLOUDFLARE_API_TOKEN·CLOUDFLARE_ACCOUNT_ID 필요).
+# 도메인 연결(DNS)·AWS 해지는 이 워크플로가 하지 않는다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Cloudflare Pages에 올리기 (준비 단계에선 false)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 준비 (글 목록·사이트맵·시작 주소)
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/static_build.py prepare
+
+      - name: 사이트 전체 받기 (wget)
+        run: |
+          wget --mirror --page-requisites --adjust-extension --convert-links --no-parent \
+               --no-host-directories --restrict-file-names=windows,nocontrol \
+               -e robots=off --wait=0.2 --tries=2 --timeout=30 \
+               --reject-regex '(\?replytocom=|\?p=|\?page_id=|\?s=|/wp-json/|xmlrpc|/wp-admin/|/wp-login|/feed/?$|/embed/?$)' \
+               -U "Mozilla/5.0 (compatible; jaylog-static-bot/1.0)" \
+               -P build/out -i build/urls.txt -o build/wget.log || true
+          tail -n 5 build/wget.log
+
+      - name: 뒷정리·점검
+        env:
+          WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+        run: python3 .github/scripts/static_build.py finish
+
+      - name: Cloudflare Pages 프로젝트 만들기 (처음 한 번, 이미 있으면 넘어감)
+        if: inputs.deploy
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create jaylog --production-branch=main
+
+      - name: Cloudflare Pages에 올리기
+        if: inputs.deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: build
+          command: pages deploy out --project-name=jaylog --branch=main
+
+      - name: 점검 보고서 커밋
+        if: always()
+        run: |
+          git config user.name "Claude"
+          git config user.email "noreply@anthropic.com"
+          git add review/static-build.txt 2>/dev/null || true
+          git diff --cached --quiet && { echo "변경 없음"; exit 0; }
+          git commit -m "무료 정적 사이트 빌드 점검 기록 [bot]"
+          for i in 1 2 3 4; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true; sleep $((2**i))
+          done
+          echo "::error::푸시 실패"; exit 1
